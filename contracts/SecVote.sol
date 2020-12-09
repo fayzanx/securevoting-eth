@@ -28,7 +28,7 @@ contract SecureVote {
     address private owner = msg.sender;
 
     // cnic mappings
-    mapping(uint64 => Voter) voterDetails;
+    mapping(uint64 => Voter) voterDetails;      //No voter will want to input his/her cnic, but whatever
     mapping(uint64 => Candidate) candidateDetails;
 
     // address mappings
@@ -60,7 +60,9 @@ contract SecureVote {
     }
     //function addVoterList();
 
-    function registerVoter(uint64 _cnic) public onlyPollingAgent {
+    function registerVoter(uint64 _cnic) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
         voterDetails[_cnic].registered = true;
     }
+    
+    function vote(uint64 _cnic, ...
 }
