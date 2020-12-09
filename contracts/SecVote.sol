@@ -44,6 +44,11 @@ contract SecureVote {
         _;
     }
 
+    modifier voterRegistered(){
+        require(voterDetails[_cnic].registered);
+        _;
+    }
+
     constructor(){
        owner = msg.sender;
     }
@@ -57,6 +62,7 @@ contract SecureVote {
         candidateDetails[_cnic].name = _name;
         candidateDetails[_cnic].party = _party;
         candidateDetails[_cnic].constituency = _const;
+        candidateDetails[_cnic].voteCount = 0;
     }
     //function addVoterList();
 
@@ -64,5 +70,10 @@ contract SecureVote {
         voterDetails[_cnic].registered = true;
     }
     
-    function vote(uint64 _cnic, ...
+    function vote(uint64 _cnic, uint16 _const, uint64 voted_cnic) public voterRegistered {
+        candidateDetails[voted_cnic].voteCount++;
+        voterDetails[_cnic].voted = true;
+        voterDetails[_cnic].voted_time = now;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
+    }
+    
 }
