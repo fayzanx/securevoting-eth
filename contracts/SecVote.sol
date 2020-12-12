@@ -70,7 +70,7 @@ contract SecureVote {
     }
     
     //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
-    function registerCandidateFromSheet(){  //Can't figure out how to import json
+    function registerCandidateFromSheet() public onlyOwner {  //Can't figure out how to import json
         
     }
     
