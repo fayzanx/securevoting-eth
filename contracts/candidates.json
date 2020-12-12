@@ -1,0 +1,7 @@
+{
+"candidates":[
+    {"Constituency":"NA43", "Name":"Doe", "CNIC":"3840302203342", "Party":"PTI"},
+    {"Constituency":"NA43", "Name":"Smith", "CNIC":"3840302203343", "Party":"Azad"},
+    {"Constituency":"NA92", "Name":"Jones", "CNIC":"3840302203344", "Party":"Congress"}
+]
+}
