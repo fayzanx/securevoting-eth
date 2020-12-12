@@ -1,10 +1,14 @@
 pragma solidity >=0.7.0 <0.8.0;
 
+//Found the mapping solution i was trying to do
+//https://ethereum.stackexchange.com/questions/58637/how-are-double-mappings-indexed
+
 contract SecureVote {
 
     // struct govtID { // government issued ID
     //     uint64 CNICnum; // cnic number
     // }
+   //function addVoterList();
    
     struct Voter {
         //govtID id;
@@ -64,7 +68,12 @@ contract SecureVote {
         candidateDetails[_cnic].constituency = _const;
         candidateDetails[_cnic].voteCount = 0;
     }
-    //function addVoterList();
+    
+    //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
+    function registerCandidateFromSheet(){  //Can't figure out how to import json
+        
+    }
+    
 
     function registerVoter(uint64 _cnic) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
         voterDetails[_cnic].registered = true;
