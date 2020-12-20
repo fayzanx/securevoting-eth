@@ -34,6 +34,7 @@ contract SecureVote {
     // cnic mappings
     mapping(uint64 => Voter) voterDetails;      //No voter will want to input his/her cnic, but whatever
     mapping(uint64 => Candidate) candidateDetails;
+    //mapping(uint16 => mapping(uint64 => Candidate)) candidateDetails;
     mapping(uint16 => uint64[]) constituencyCandidates; //cnic and (name?)
 
     // address mappings
@@ -73,6 +74,10 @@ contract SecureVote {
 
     function getConstituencyCandidates(uint16 _const) public view returns (uint64[] memory) {
         return constituencyCandidates[_const];
+    }
+
+    function getCandidateName(uint64 _cnic) public view returns (bytes32) { //can be handled externally.
+        return candidateDetails[_cnic].name;
     }
 
     function registerVoter(uint64 _cnic) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
