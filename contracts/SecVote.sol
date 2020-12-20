@@ -15,7 +15,7 @@ contract SecureVote {
         bool voted;  // if true, that person already voted
         bool registered;
         uint16 constituency;
-        bytes24 voted_time;
+        uint voted_time;
     }
 
     struct Candidate {
@@ -26,7 +26,7 @@ contract SecureVote {
         uint16 party; //hold party as code, store codes externally
         uint16 constituency;
         //string logo; //logo should be accessed externally
-        uint voteCount;
+        uint64 voteCount;
     }
 
     address private owner = msg.sender;
@@ -34,6 +34,7 @@ contract SecureVote {
     // cnic mappings
     mapping(uint64 => Voter) voterDetails;      //No voter will want to input his/her cnic, but whatever
     mapping(uint64 => Candidate) candidateDetails;
+    mapping(uint16 => uint64[]) constituencyCandidates; //cnic and (name?)
 
     // address mappings
     mapping(address => bool) isPollingAgent; 
@@ -48,7 +49,7 @@ contract SecureVote {
         _;
     }
 
-    modifier voterRegistered(){
+    modifier voterRegistered(uint64 _cnic){
         require(voterDetails[_cnic].registered);
         _;
     }
@@ -63,26 +64,31 @@ contract SecureVote {
 
     function registerCandidate(uint64 _cnic, bytes32 _name, uint16 _party, uint16 _const) public onlyOwner {
         //TODO: decide if we should bind candidates / voters with blockchain addresses.
+        constituencyCandidates[_const].push(_cnic);
         candidateDetails[_cnic].name = _name;
         candidateDetails[_cnic].party = _party;
         candidateDetails[_cnic].constituency = _const;
         candidateDetails[_cnic].voteCount = 0;
     }
-    
-    //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
-    function registerCandidateFromSheet() public onlyOwner {  //Can't figure out how to import json
-        
+
+    function getConstituencyCandidates(uint16 _const) public view returns (uint64[] memory) {
+        return constituencyCandidates[_const];
     }
-    
 
     function registerVoter(uint64 _cnic) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
         voterDetails[_cnic].registered = true;
     }
     
-    function vote(uint64 _cnic, uint16 _const, uint64 voted_cnic) public voterRegistered {
-        candidateDetails[voted_cnic].voteCount++;
+    function vote(uint64 _cnic, uint64 voted_cnic) public voterRegistered(_cnic) {
+        require(voterDetails[_cnic].constituency == candidateDetails[voted_cnic].constituency); //possible modifier
         voterDetails[_cnic].voted = true;
-        voterDetails[_cnic].voted_time = now;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
+        voterDetails[_cnic].voted_time = block.timestamp;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
+        candidateDetails[voted_cnic].voteCount++;
     }
+
+    //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
+    // function registerCandidateFromSheet() public onlyOwner {  //Can't figure out how to import json
+        //don't need such function in a contract. DApp can handle  this.
+    // }
     
 }
