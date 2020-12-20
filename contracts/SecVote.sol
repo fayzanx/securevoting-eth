@@ -93,8 +93,8 @@ contract SecureVote {
     }
     
     function winner(uint16 _const) public view returns(uint64 cnic_){
-        uint64 max = 0;
-        uint64 winner_ = 0;
+        memory uint64 max = 0;
+        memory uint64 winner_ = 0;
         uint64[] memory candi = getConstituencyCandidates(_const);
         for(uint i=0;i<candi.length;i++){
             if(candidateDetails[candi[i]].voteCount >max){
