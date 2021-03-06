@@ -1,5 +1,6 @@
 #ignore truffle build artifcats
 /build
+/src/abis
 
 # dependencies
 /node_modules
