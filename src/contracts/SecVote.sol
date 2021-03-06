@@ -1,4 +1,5 @@
 pragma solidity >=0.7.0 <0.8.0;
+//SPDX-License-Identifier: UNLICENSED
 
 //Found the mapping solution i was trying to do
 //https://ethereum.stackexchange.com/questions/58637/how-are-double-mappings-indexed
@@ -111,10 +112,13 @@ contract SecureVote {
     // }
     
 }
+
 /*
 Possible voting method:
-Voter will get his constituency number from NADRA(Every constituency is mapped to a number). Every voter can vote only to candidates of his/her constituency.
-In polling boaths, polling agents(one from every party) will verify if voter is registered or not and if he has already voted or not.
-After verifying, polling agents will let him/her vote from a Dapp in a node/laptop.
-He will fill his constituency, and cnic(only for voting record and will not be recorded against a vote). Then select symbol of selected candidate and vote complete.
+Voter will get his constituency number from NADRA(Every constituency is mapped to a number). Every voter 
+can vote only to candidates of his/her constituency. In polling booths, polling agents(one from every party)
+will verify if voter is registered or not and if he has already voted or not. After verifying, polling 
+agents will let him/her vote from a Dapp in a node/laptop. He will fill his constituency, and cnic
+(only for voting record and will not be recorded against a vote). Then select symbol of selected candidate
+and vote complete.
 */
