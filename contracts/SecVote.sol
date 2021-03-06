@@ -80,7 +80,7 @@ contract SecureVote {
         return candidateDetails[_cnic].name;
     }
 
-    function registerVoter(uint64 _cnic) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
+    function registerVoter(uint64 _cnic, uint16 _const) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
         voterDetails[_cnic].registered = true;
         voterDetails[_cnic].constituency = _const;
     }
@@ -93,8 +93,8 @@ contract SecureVote {
     }
     
     function winner(uint16 _const) public view returns(uint64 cnic_){
-        memory uint64 max = 0;
-        memory uint64 winner_ = 0;
+        uint64 max = 0;
+        uint64 winner_ = 0;
         uint64[] memory candi = getConstituencyCandidates(_const);
         for(uint i=0;i<candi.length;i++){
             if(candidateDetails[candi[i]].voteCount >max){
@@ -117,4 +117,4 @@ Voter will get his constituency number from NADRA(Every constituency is mapped t
 In polling boaths, polling agents(one from every party) will verify if voter is registered or not and if he has already voted or not.
 After verifying, polling agents will let him/her vote from a Dapp in a node/laptop.
 He will fill his constituency, and cnic(only for voting record and will not be recorded against a vote). Then select symbol of selected candidate and vote complete.
-
+*/
