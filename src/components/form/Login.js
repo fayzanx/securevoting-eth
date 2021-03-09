@@ -1,9 +1,5 @@
 import React from 'react'
-
-import Alert from 'react-bootstrap/Alert'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-//import {Container, Row, Col, Alert, Form, Button} from 'react-bootstrap'
+import {Alert, Form, Button} from 'react-bootstrap/Alert'
 
 import { useForm } from 'react-hook-form'
 
@@ -15,7 +11,7 @@ function Login() {
     }
 
     return (
-        <div className="app-form-login">
+        <div className="form-login">
             <Alert variant={(errors.cnic || errors.password) ? "danger" : "primary"}>
                 {!(errors.cnic || errors.password) && <span>Proctor login required to proceed</span>}
                 <ul>

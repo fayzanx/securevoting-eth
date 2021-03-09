@@ -1,14 +1,11 @@
 import React from 'react'
+import {Container, Row, Col} from 'react-bootstrap'
 
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-
-import LoginForm from '../Form/Login'
+import LoginForm from '../components/form/Login'
 
 function Login() {
     return (
-        <div className="screen-login">
+        <div className="page-login">
             <Container>
                 <Row>
                     <Col md="5" sm="10" xs="12" className="mx-auto">
