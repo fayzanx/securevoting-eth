@@ -5,7 +5,7 @@ import './Topbar.css'
 
 function Topbar() {
     return (
-        <div className="nav-top">
+        <div className="nav-top mb-3">
             <Navbar bg="success" variant="dark" expand="lg" >
                 <Navbar.Brand href="#home">EVS v0.1</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -24,7 +24,12 @@ function Topbar() {
                     <Navbar.Text className="info-logged-in">
                         Signed in as: <a href="#login">Mark Otto</a>
                     </Navbar.Text>
-                    <Button variant="danger">Logout</Button>
+                    <Link to="/account/login">
+                       <Button variant="info">Login</Button>
+                    </Link>
+                    <Link to="/account/logout">
+                       <Button variant="danger">Logout</Button>
+                    </Link>
                     
                 </Navbar.Collapse>
             </Navbar>

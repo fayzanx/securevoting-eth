@@ -1,5 +1,5 @@
 import React from 'react'
-import {Alert, Form, Button} from 'react-bootstrap/Alert'
+import {Alert, Form, Button} from 'react-bootstrap'
 
 import { useForm } from 'react-hook-form'
 
@@ -28,8 +28,8 @@ function Login() {
                     <Form.Label>Password</Form.Label>
                     <Form.Control name="password" type="password" placeholder="Password" ref={register({ required: "Password is required" })} />
                 </Form.Group>
-                <Button type="submit" value="login" className="mb-2 w-100">Login</Button>
-                <Button type="submit" value="register" className="w-100" variant="danger">Register</Button>
+                <Button type="submit" value="login" className="mb-2 w-100" size="lg">Login</Button>
+                {/* <Button type="submit" value="register" className="w-100" size="lg" variant="danger">Register</Button> */}
             </Form>
         </div>
     )
