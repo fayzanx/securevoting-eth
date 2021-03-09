@@ -5,18 +5,32 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 //import {Container, Row, Col, Alert, Form, Button} from 'react-bootstrap'
 
+import { useForm } from 'react-hook-form'
+
 function Login() {
+    const { register, handleSubmit, errors } = useForm();
+
+    function onSubmitCallback(data) {
+        console.log(data) //test
+    }
+
     return (
         <div className="app-form-login">
-            <Alert variant="primary">Proctor login required to proceed</Alert>
-            <Form>
+            <Alert variant={(errors.cnic || errors.password) ? "danger" : "primary"}>
+                {!(errors.cnic || errors.password) && <span>Proctor login required to proceed</span>}
+                <ul>
+                    {errors.cnic && <li>{errors.cnic.message}</li>}
+                    {errors.password && <li>{errors.password.message}</li>}
+                </ul>
+            </Alert>
+            <Form onSubmit={handleSubmit(onSubmitCallback)}>
                 <Form.Group controlId="loginCnic">
                     <Form.Label>CNIC</Form.Label>
-                    <Form.Control type="text" pattern="[0-9]{5}-[0-9]{7}-[0-9]{1}" placeholder="12345-1234567-8 (without dashes)" />
+                    <Form.Control name="cnic" type="text" placeholder="12345-1234567-8" ref={register({ required: "CNIC is required" })} />
                 </Form.Group>
                 <Form.Group controlId="loginPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control name="password" type="password" placeholder="Password" ref={register({ required: "Password is required" })} />
                 </Form.Group>
                 <Button type="submit" value="login" className="mb-2 w-100">Login</Button>
                 <Button type="submit" value="register" className="w-100" variant="danger">Register</Button>

@@ -27,7 +27,7 @@ class App extends Component {
             <div className="App">
                 <LoginPage />
                 
-                <h1>App.js1</h1>
+                <h1>Voting App</h1>
                 <p>Account Address: {this.state.account}</p>
             </div>
         )
