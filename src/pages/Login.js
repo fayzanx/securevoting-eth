@@ -1,18 +1,18 @@
 import React from 'react'
-import {Container, Row, Col} from 'react-bootstrap'
+import {Row, Col} from 'react-bootstrap'
+import {Redirect} from 'react-router-dom'
 
 import LoginForm from '../components/form/Login'
 
-function Login() {
+function Login( props ) {
     return (
         <div className="page-login">
-            <Container>
                 <Row>
                     <Col md="5" sm="10" xs="12" className="mx-auto">
-                        <LoginForm />
+                        <LoginForm loginUpdate={props.loginUpdate} />
+                        { (props.loggedIn) && <Redirect to="/portal" /> }
                     </Col>
                 </Row>
-            </Container>
         </div>
     )
 }

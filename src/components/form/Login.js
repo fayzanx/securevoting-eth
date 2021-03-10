@@ -3,16 +3,20 @@ import {Alert, Form, Button} from 'react-bootstrap'
 
 import { useForm } from 'react-hook-form'
 
-function Login() {
+function Login( props ) {
     const { register, handleSubmit, errors } = useForm();
 
-    function onSubmitCallback(data) {
-        console.log(data) //test
+    function onSubmitCallback( data ) {
+        console.log( data )
+
+        if( data.cnic === "123" && data.password === "abc" )
+            props.loginUpdate.call( data )
     }
 
     return (
         <div className="form-login">
             <Alert variant={(errors.cnic || errors.password) ? "danger" : "primary"}>
+                <div>[TEST MODE] cnic: 123, password: abc</div>
                 {!(errors.cnic || errors.password) && <span>Proctor login required to proceed</span>}
                 <ul>
                     {errors.cnic && <li>{errors.cnic.message}</li>}

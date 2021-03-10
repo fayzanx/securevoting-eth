@@ -1,16 +1,19 @@
 import React from 'react'
-import {Container, Col, Row, Card, ListGroup, ListGroupItem, Image} from 'react-bootstrap'
+import {Col, Row, Card, ListGroup, ListGroupItem, Image} from 'react-bootstrap'
+import {Redirect} from 'react-router-dom'
+
+import PageTitle from '../components/text/Title'
 import './Portal.css'
 import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
 
-function Portal() {
+function Portal({ account, loggedIn }) {
     return (
         <div className="page-portal">
-            <Container>
+            { !loggedIn && <Redirect to="/account/login" /> }
                 <Row>
                     <Col md="8" sm="12">
-                        <h1 className="display-4">VOTING AREA</h1>
-                        <p className="text-muted ml-2">Candidate Infomation will appear here</p>
+                        <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here"/>
+                        <p>Account Address: {account}</p>
                     </Col>
                     <Col md="4" sm="12">
                         <Card>
@@ -37,7 +40,6 @@ function Portal() {
                         </Card>
                     </Col>
                 </Row>
-            </Container>
         </div>
     )
 }

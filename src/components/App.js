@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import {Container} from 'react-bootstrap'
 import Web3 from 'web3'
 
 import TopNavigation from '../components/nav/Topbar'
+import PageTitle from '../components/text/Title'
 import LoginPage from '../pages/Login'
-import Portal from '../pages/Portal'
+import PortalPage from '../pages/Portal'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
 
-
 class App extends Component {
     constructor( props ) {
         super( props )
-        this.state = { account: '' }
+        this.state = { account: '', loggedIn: false }
+        this.handleUserLoginStatus = this.handleUserLoginStatus.bind(this)
     }
 
     async loadBlockchainData() {
@@ -27,53 +29,59 @@ class App extends Component {
         this.loadBlockchainData()
     }
 
+    handleUserLoginStatus( data ) {
+            this.setState({ loggedIn: true })
+    }
+
     render() {
         return (
             <div className="app-main">
                 <Router>
-                    <TopNavigation />
-                    <Switch>
-                        <Route path="/portal/page1" component={PageA}/>
-                        <Route path="/portal/page2" component={PageB}/>
-                        <Route path="/portal" component={Portal}/>
-                       
-                        <Route path="/account/login" component={LoginPage}/>
-                        <Route path="/account/logout" component={LogoutPage}/>
-                       
-                        <Route path="/" component={PageHome}/>
-                    </Switch>
+                    <TopNavigation loggedIn={this.state.loggedIn}/>
+                    <Container>
+                        <Switch>
+                            <Route path="/portal/page1" component={PageA}/>
+                            <Route path="/portal/page2" component={PageB}/>
+                            <Route path="/portal" render={(props) => <PortalPage account={this.state.account} loggedIn={this.state.loggedIn} {...props} />}/>
+                        
+                            <Route path="/account/login" render={(props) => <LoginPage loggedIn={this.state.loggedIn} loginUpdate={this.handleUserLoginStatus} {...props} />}/>
+                            <Route path="/account/logout" component={LogoutPage}/>
+                        
+                            <Route path="/" component={PageHome}/>
+                        </Switch>
+                    </Container>
                 </Router>
             </div>
         )
     }
 } 
 
-
+// sample pages
 function PageHome() {
     return (
         <div>
-            <h1>page:home</h1>
+            <PageTitle title="HOME PAGE" subtitle="Just a sample page"/>
         </div>
     )
 }
 function PageA() {
     return (
         <div>
-            <h1>page:A</h1>
+            <PageTitle title="PAGE A" subtitle="Just a sample page"/>
         </div>
     )
 }
 function PageB() {
     return (
         <div>
-            <h1>page:B</h1>
+            <PageTitle title="PAGE B" subtitle="Just a sample page"/>
         </div>
     )
 }
 function LogoutPage() {
     return (
         <div>
-            <h1>page:logging-out</h1>
+            <PageTitle title="LOGOUT PAGE" subtitle="Just a sample page"/>
         </div>
     )
 }
