@@ -6,7 +6,7 @@ import PageTitle from '../components/text/Title'
 import './Portal.css'
 import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
 
-function Portal({ account, loggedIn }) {
+function Portal({ contract, account, loggedIn }) {
     return (
         <div className="page-portal">
             { !loggedIn && <Redirect to="/account/login" /> }
@@ -14,6 +14,7 @@ function Portal({ account, loggedIn }) {
                     <Col md="8" sm="12">
                         <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here"/>
                         <p>Account Address: {account}</p>
+                        <p>Contract Address: {contract.address}</p>
                     </Col>
                     <Col md="4" sm="12">
                         <Card>

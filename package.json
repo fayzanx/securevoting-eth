@@ -4,6 +4,7 @@
   "description": "A blockchain based secure electronic voting system - App",
   "private": true,
   "dependencies": {
+    "@truffle/contract": "^4.3.16",
     "babel": "^6.23.0",
     "bootstrap": "^4.6.0",
     "chai": "^4.3.3",

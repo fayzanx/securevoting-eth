@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { Container } from 'react-bootstrap'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import {Container} from 'react-bootstrap'
 import Web3 from 'web3'
+import TruffleContract from '@truffle/contract'
+//import { secureVoteAddress } from '../config'
+import secureVoteJson from '../artifacts/SecureVote.json'
 
 import TopNavigation from '../components/nav/Topbar'
 import PageTitle from '../components/text/Title'
@@ -14,19 +17,32 @@ import './App.css'
 class App extends Component {
     constructor( props ) {
         super( props )
-        this.state = { account: '', loggedIn: false }
+        this.state = { account: '', contract: null, loggedIn: false }
         this.handleUserLoginStatus = this.handleUserLoginStatus.bind(this)
     }
 
     async loadBlockchainData() {
-        const web3 = new Web3( Web3.givenProvider || "http://localhost:9545" )
-        const accounts = await web3.eth.getAccounts()
+        this.provider = Web3.givenProvider || "http://localhost:9545"
+        this.web3 = new Web3(this.provider )
+
+        const accounts = await this.web3.eth.getAccounts()
+
         this.setState({ account: accounts[0] })
-        console.log('Account Address: ', this.state.account)
+
+        console.log( 'account address: ', this.state.account )
+
+        this.SecureVoteContract = TruffleContract( secureVoteJson )
+        this.SecureVoteContract.setProvider( this.provider )
+
+        this.SecureVoteContract.deployed().then(( instance )=>{
+            this.setState({ 'contract': instance })
+            console.log( 'contract address: ', this.state.contract.address )
+        })
+
     }
 
     componentWillMount() {
-        this.loadBlockchainData()
+        this.loadBlockchainData() 
     }
 
     handleUserLoginStatus( data ) {
@@ -42,7 +58,7 @@ class App extends Component {
                         <Switch>
                             <Route path="/portal/page1" component={PageA}/>
                             <Route path="/portal/page2" component={PageB}/>
-                            <Route path="/portal" render={(props) => <PortalPage account={this.state.account} loggedIn={this.state.loggedIn} {...props} />}/>
+                            <Route path="/portal" render={(props) => <PortalPage contract={this.state.contract} account={this.state.account} loggedIn={this.state.loggedIn} {...props} />}/>
                         
                             <Route path="/account/login" render={(props) => <LoginPage loggedIn={this.state.loggedIn} loginUpdate={this.handleUserLoginStatus} {...props} />}/>
                             <Route path="/account/logout" component={LogoutPage}/>
