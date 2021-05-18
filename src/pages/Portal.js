@@ -1,31 +1,46 @@
-import React from 'react'
-import {Col, Row, Card, ListGroup, ListGroupItem, Image} from 'react-bootstrap'
-import {Redirect} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Col, Row, Card, ListGroup, ListGroupItem, Image } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom'
 
 import PageTitle from '../components/text/Title'
 import './Portal.css'
 import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
 
-function Portal({ contract, account, loggedIn }) {
-    return (
-        <div className="page-portal">
-            { !loggedIn && <Redirect to="/account/login" /> }
+class Portal extends Component {
+    constructor( props ){
+        super( props )
+        this.getCandidatesList(1)
+    }
+    
+    async getCandidatesList(c){
+        this.props.contract.getConstituencyCandidates(c).then((res)=>{
+            let array = res;
+            console.log('array[0]', array[0]);
+    
+            console.log('array[0].val', array[0].toString());
+            console.log('array', array);
+        })
+    }
+
+    render() {
+        return (
+            <div className="page-portal">
+                { !this.props.loggedIn && <Redirect to="/account/login" />}
                 <Row>
                     <Col md="8" sm="12">
-                        <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here"/>
-                        <p>Account Address: {account}</p>
-                        <p>Contract Address: {contract.address}</p>
+                        <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here" />
+                        <p>Account Address: {this.props.account}</p>
                     </Col>
                     <Col md="4" sm="12">
                         <Card>
                             {/* <Card.Img className="portal-voter-img" variant="top" src={ImgPlaceholderUser} roundedCircle/> */}
                             <div className="mx-auto mt-1 portal-voter-img">
-                                <Image src={ImgPlaceholderUser}/>
+                                <Image src={ImgPlaceholderUser} />
                             </div>
                             <Card.Body>
                                 <Card.Title><b>Voter Name</b></Card.Title>
                                 <Card.Text>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est totam ducimus facere ipsam.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Est totam ducimus facere ipsam.
                                 </Card.Text>
                             </Card.Body>
                             <ListGroup className="list-group-flush">
@@ -41,7 +56,8 @@ function Portal({ contract, account, loggedIn }) {
                         </Card>
                     </Col>
                 </Row>
-        </div>
-    )
+            </div>
+        )
+    }
 }
 export default Portal

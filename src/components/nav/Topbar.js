@@ -7,7 +7,8 @@ function Topbar( props ) {
     let logActionBtn
     if( props.loggedIn ){
         logActionBtn = <><Navbar.Text className="info-logged-in">
-                            Supervisor: <Link to="/account/profile">John Doe</Link>
+                            Supervisor: <Link to="/account/profile">John Doe</Link> 
+                            { ` (${props.address.substr(0, 6)}...${props.address.substr(-4, 4)}) ` }
                         </Navbar.Text>
                         <Link to="/account/logout">
                             <Button variant="danger">Logout</Button>
@@ -25,7 +26,15 @@ function Topbar( props ) {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Link to="/" className="nav-link">Home</Link>
-                        <Link to="/manage/" className="nav-link">Governance</Link>
+                        <NavDropdown title="Governance" id="basic-nav-dropdown">
+                            <Link to="/manage" className="dropdown-item">Manage</Link>
+                            <NavDropdown.Divider />
+                            <Link to="/manage/register-candidate" className="dropdown-item">Register Candidate</Link>
+                            <Link to="/manage/register-voter" className="dropdown-item">Register Voter</Link>
+                            <Link to="/manage/register-agent" className="dropdown-item">Register Agent</Link>
+                            <NavDropdown.Divider />
+                            <Link to="/manage/result" className="dropdown-item">View Result</Link>
+                        </NavDropdown>
                         <Link to="/portal" className="nav-link">Voting Portal</Link>
                         <NavDropdown title="More" id="basic-nav-dropdown">
                             <Link to="/portal/page1" className="dropdown-item">Portal Page A</Link>

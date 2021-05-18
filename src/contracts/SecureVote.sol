@@ -33,7 +33,7 @@ contract SecureVote {
     address private owner = msg.sender;
 
     // cnic mappings
-    mapping(uint64 => Voter) voterDetails;      //No voter will want to input his/her cnic, but whatever
+    mapping(uint64 => Voter) voterDetails;
     mapping(uint64 => Candidate) candidateDetails;
     //mapping(uint16 => mapping(uint64 => Candidate)) candidateDetails;
     mapping(uint16 => uint64[]) constituencyCandidates; //cnic and (name?)
@@ -53,6 +53,11 @@ contract SecureVote {
 
     modifier voterRegistered(uint64 _cnic){
         require(voterDetails[_cnic].registered);
+        _;
+    }
+
+    modifier voterHasntVoted(uint64 _cnic){
+        require(!voterDetails[_cnic].voted);
         _;
     }
 
@@ -86,21 +91,21 @@ contract SecureVote {
         voterDetails[_cnic].constituency = _const;
     }
     
-    function vote(uint64 _cnic, uint64 voted_cnic) public voterRegistered(_cnic) {
+    function vote(uint64 _cnic, uint64 voted_cnic) public onlyPollingAgent voterRegistered(_cnic) voterHasntVoted(_cnic) {
         require(voterDetails[_cnic].constituency == candidateDetails[voted_cnic].constituency); //possible modifier
         voterDetails[_cnic].voted = true;
         voterDetails[_cnic].voted_time = block.timestamp;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
         candidateDetails[voted_cnic].voteCount++;
     }
     
-    function winner(uint16 _const) public view returns(uint64 cnic_){
+    function winner(uint16 _const) public view onlyOwner returns(uint64 cnic_) {
         uint64 max = 0;
         uint64 winner_ = 0;
-        uint64[] memory candi = getConstituencyCandidates(_const);
-        for(uint i=0;i<candi.length;i++){
-            if(candidateDetails[candi[i]].voteCount >max){
-                max = candidateDetails[candi[i]].voteCount;
-                winner_ = candi[i];
+        uint64[] memory candidates = getConstituencyCandidates(_const);
+        for(uint i=0;i<candidates.length;i++){
+            if(candidateDetails[candidates[i]].voteCount >max){
+                max = candidateDetails[candidates[i]].voteCount;
+                winner_ = candidates[i];
             }
         }
         cnic_ = winner_; 
@@ -108,10 +113,16 @@ contract SecureVote {
 
     //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
     // function registerCandidateFromSheet() public onlyOwner {  //Can't figure out how to import json
-        //don't need such function in a contract. DApp can handle  this.
     // }
     
 }
+
+/*  TODO
+    1. Add ownership transfer / renouncing functions.
+    2. While registering candidate, check if a party is nominating more than one cadidate for a constituency
+    3. Add check, agent can't be a candidate
+    4. Add cnic, constituency information for agent. Agent can't perform any actions outside the constituency
+*/
 
 /*
 Possible voting method:

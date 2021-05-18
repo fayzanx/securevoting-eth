@@ -7,7 +7,7 @@ function Login( props ) {
     const { register, handleSubmit, errors } = useForm();
 
     function onSubmitCallback( data ) {
-        console.log( data )
+        //console.log( data )
 
         if( data.cnic === "123" && data.password === "abc" )
             props.loginUpdate.call( data )
@@ -16,7 +16,8 @@ function Login( props ) {
     return (
         <div className="form-login">
             <Alert variant={(errors.cnic || errors.password) ? "danger" : "primary"}>
-                <div>[TEST MODE] cnic: 123, password: abc</div>
+                <b>Supervisor Login</b>
+                <div><i>[TEST MODE] cnic: 123, password: abc</i></div>
                 {!(errors.cnic || errors.password) && <span>Proctor login required to proceed</span>}
                 <ul>
                     {errors.cnic && <li>{errors.cnic.message}</li>}
