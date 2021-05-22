@@ -21,16 +21,27 @@ class App extends Component {
     constructor( props ) {
         super( props )
         this.state = { account: '', contract: null, loggedIn: false }
-        this.handleUserLoginStatus = this.handleUserLoginStatus.bind(this)
+
     }
 
     async loadBlockchainData() {
-        this.provider = Web3.givenProvider || "http://localhost:9545"
-        this.web3 = new Web3(this.provider )
+        // if( window.ethereum ){ // metamask
+        //     this.provider = window.ethereum
+        //     this.web3 = new Web3(this.provider)
 
-        const accounts = await this.web3.eth.getAccounts()
-        this.setState({ account: accounts[0] })
-        this.web3.eth.defaultAccount = accounts[0]
+        //     const accounts = await window.ethereum.enable()
+        //     this.setState({ account: accounts[0] })
+
+        //     window.ethereum.on('accountsChanged', )
+
+        // } else {
+            this.provider = Web3.givenProvider || "http://localhost:9545"
+            this.web3 = new Web3(this.provider )
+    
+            const accounts = await this.web3.eth.getAccounts()
+            this.setState({ account: accounts[0] })
+        // }
+        //this.web3.eth.defaultAccount = accounts[0]
 
         this.SecureVoteContract = TruffleContract( secureVoteJson )
         this.SecureVoteContract.setProvider( this.provider )
@@ -45,7 +56,7 @@ class App extends Component {
         this.loadBlockchainData() 
     }
 
-    handleUserLoginStatus( data ) {
+    handleUserLoginStatus = ( data ) => {
             this.setState({ loggedIn: true })
     }
 

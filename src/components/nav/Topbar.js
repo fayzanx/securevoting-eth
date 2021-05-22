@@ -5,10 +5,11 @@ import './Topbar.css'
 
 function Topbar( props ) {
     let logActionBtn
+    let userAddress = props.address || '0xdeaddeaddead'
     if( props.loggedIn ){
         logActionBtn = <><Navbar.Text className="info-logged-in">
                             Supervisor: <Link to="/account/profile">John Doe</Link> 
-                            { ` (${props.address.substr(0, 6)}...${props.address.substr(-4, 4)}) ` }
+                            { ` (${userAddress.substr(0, 6)}...${userAddress.substr(-4, 4)}) ` }
                         </Navbar.Text>
                         <Link to="/account/logout">
                             <Button variant="danger">Logout</Button>

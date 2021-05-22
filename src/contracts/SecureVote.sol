@@ -82,8 +82,8 @@ contract SecureVote {
         return constituencyCandidates[_const];
     }
 
-    function getCandidateName(uint64 _cnic) public view returns (string memory) { //can be handled externally.
-        return candidateDetails[_cnic].name;
+    function getCandidateDetails(uint64 _cnic) public view returns (string memory, uint16) { //can be handled externally.
+        return (candidateDetails[_cnic].name, candidateDetails[_cnic].party);
     }
 
     function registerVoter(uint64 _cnic, uint16 _const) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.

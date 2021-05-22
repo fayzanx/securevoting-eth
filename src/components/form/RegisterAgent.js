@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Form, Button } from 'react-bootstrap'
+import { Alert, Form, Button, Spinner } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 
 function RegisterAgent( props ) {
@@ -29,7 +29,10 @@ function RegisterAgent( props ) {
                     <Form.Label>ETH Address</Form.Label>
                     <Form.Control name="address" type="text" placeholder="0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B" ref={register({ required: "Agent's ETH Address is required" })} />
                 </Form.Group>
-                <Button type="submit" value="login" className="mb-2 w-100" size="lg">Register Agent</Button>
+                <Button type="submit" value="login" className="mb-2 w-100" size="lg" disabled={props.loading}>
+                    {!props.loading && 'Register Agent'}
+                    {props.loading && <Spinner animation="border" as="span" />}
+                </Button>
             </Form>
         </div>
     )

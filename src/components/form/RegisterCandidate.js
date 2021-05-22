@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Form, Button } from 'react-bootstrap'
+import { Alert, Form, Button, Spinner } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 
 function RegisterCandidate( props ) {
@@ -39,7 +39,10 @@ function RegisterCandidate( props ) {
                     <Form.Label>Party</Form.Label>
                     <Form.Control name="party" type="text" placeholder="Pakistan Muslim League" ref={register({ required: "Party is required" })} />
                 </Form.Group>
-                <Button type="submit" value="login" className="mb-2 w-100" size="lg">Register Candidate</Button>
+                <Button type="submit" value="login" className="mb-2 w-100" size="lg" disabled={props.loading}>
+                    {!props.loading && 'Register Candidate'}
+                    {props.loading && <Spinner animation="border" as="span" />}
+                </Button>
             </Form>
         </div>
     )

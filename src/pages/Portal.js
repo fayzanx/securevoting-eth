@@ -1,63 +1,115 @@
-import React, { Component } from 'react'
-import { Col, Row, Card, ListGroup, ListGroupItem, Image } from 'react-bootstrap'
+import React, { useState, useEffect } from 'react'
+import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
 import PageTitle from '../components/text/Title'
 import './Portal.css'
 import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
 
-class Portal extends Component {
-    constructor( props ){
-        super( props )
-        this.getCandidatesList(1)
-    }
+function Portal( props ) {
+    const [candidateDetails, setCandidateDetails] = useState([{name: 'Faizan', cnic: '123', party: '786'}]);
+    const [loading, setLoading] = useState( true );
     
-    async getCandidatesList(c){
-        this.props.contract.getConstituencyCandidates(c).then((res)=>{
-            let array = res;
-            console.log('array[0]', array[0]);
-    
-            console.log('array[0].val', array[0].toString());
-            console.log('array', array);
-        })
-    }
+    useEffect(() => {
+        let mounted = true
+        if (props.loggedIn && props.contract != null && loading) {
+            props.contract.getConstituencyCandidates(1).then((_cnics) => {
+                if( mounted ){
+                if (_cnics.length < 1) return alert('ERROR: No Candidate Data Exists')
+                _cnics = _cnics.map((el) => el.toString())
+                
+                let candidatesArray = []
+                Promise.all( _cnics.map((el,id)=>props.contract.getCandidateDetails(el)) )
+                    .then((_candidates) => _candidates.forEach(
+                            (_candidate, id) => candidatesArray.push({
+                                cnic: _cnics[id],
+                                name: _candidate[0],
+                                party: _candidate[1].toString()
+                            })))
+                    .then(()=>{
+                        setCandidateDetails( candidatesArray )
+                        console.log( 'candidateDetails', candidatesArray )
+                        setLoading( false )
+                    })
 
-    render() {
+                // _cnics.forEach((_cnic) => {
+                //     props.contract.getCandidateDetails(_cnic).then((_candidates) => {
+                //         candidatesArray.push({
+                //             cnic: _cnic,
+                //             name: _candidates[0],
+                //             party: _candidates[1].toString()
+                //         })
+                //     })
+                // })
+                
+                }
+            }).catch((err) => alert('ERROR! ' + err.message))
+        } 
+
+        return () => mounted = false
+    }, [ loading, props.contract, props.loggedIn ])
+
+    const renderCandidateRow = (candidate, index) => {
         return (
-            <div className="page-portal">
-                { !this.props.loggedIn && <Redirect to="/account/login" />}
-                <Row>
-                    <Col md="8" sm="12">
-                        <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here" />
-                        <p>Account Address: {this.props.account}</p>
-                    </Col>
-                    <Col md="4" sm="12">
-                        <Card>
-                            {/* <Card.Img className="portal-voter-img" variant="top" src={ImgPlaceholderUser} roundedCircle/> */}
-                            <div className="mx-auto mt-1 portal-voter-img">
-                                <Image src={ImgPlaceholderUser} />
-                            </div>
-                            <Card.Body>
-                                <Card.Title><b>Voter Name</b></Card.Title>
-                                <Card.Text>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Est totam ducimus facere ipsam.
-                                </Card.Text>
-                            </Card.Body>
-                            <ListGroup className="list-group-flush">
-                                <ListGroupItem>CNIC Number</ListGroupItem>
-                                <ListGroupItem>CNIC Epiry</ListGroupItem>
-                                <ListGroupItem>Gender</ListGroupItem>
-                                <ListGroupItem>Father Name</ListGroupItem>
-                            </ListGroup>
-                            <Card.Body>
-                                <Card.Link href="#">Action 1</Card.Link>
-                                <Card.Link href="#">Action 2</Card.Link>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-            </div>
+            <tr key={candidate.cnic}>
+                <td>{index+1}</td> 
+                <td>{candidate.cnic}</td>
+                <td>{candidate.name}</td>
+                <td>{candidate.party}</td>
+                <td>SYM</td>
+                <td><Button variant="success">VOTE</Button></td>
+            </tr>
         )
     }
+
+    return (
+        <div className="page-portal">
+            { !props.loggedIn && <Redirect to="/account/login" />}
+            <Row>
+                <Col md="8" sm="12">
+                    <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here" />
+                    <p>Account Address: {props.account}</p>
+                    <p>Constituency: ID-1</p>
+                    <p>Total Candidates: {!loading && candidateDetails.length}</p>
+                    <Table bordered striped hover>
+                        <thead>
+                            <tr>
+                                <th>#</th><th>CNIC</th><th>Name</th><th>Party</th><th>Symbol</th><th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading && <tr><td colSpan="5">Loading...</td></tr>}
+                            {!loading && candidateDetails.map(renderCandidateRow)}
+                        </tbody>
+                    </Table>
+                </Col>
+                <Col md="4" sm="12">
+                    <Card>
+                        {/* <Card.Img className="portal-voter-img" variant="top" src={ImgPlaceholderUser} roundedCircle/> */}
+                        <div className="mx-auto mt-1 portal-voter-img">
+                            <Image src={ImgPlaceholderUser} />
+                        </div>
+                        <Card.Body>
+                            <Card.Title><b>Voter Name</b></Card.Title>
+                            <Card.Text>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est totam ducimus facere ipsam.
+                        </Card.Text>
+                        </Card.Body>
+                        <ListGroup className="list-group-flush">
+                            <ListGroupItem>CNIC Number</ListGroupItem>
+                            <ListGroupItem>CNIC Epiry</ListGroupItem>
+                            <ListGroupItem>Gender</ListGroupItem>
+                            <ListGroupItem>Father Name</ListGroupItem>
+                        </ListGroup>
+                        <Card.Body>
+                            <Card.Link href="#">Action 1</Card.Link>
+                            <Card.Link href="#">Action 2</Card.Link>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </div>
+    )
 }
+
 export default Portal
