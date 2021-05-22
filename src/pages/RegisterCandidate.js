@@ -48,7 +48,7 @@ class RegisterCandidate extends Component {
                     <Col sm="12" className="text-center">
                         <PageTitle title="GOVERNANCE AREA" subtitle="Setup and Manage Elections from here" />
                     </Col>
-                    <Col md="6" sm="12" className="evs-center">
+                    <Col md="6" sm="12" className="mx-auto">
                         <RegisterCandidateForm onRegister={this.handleCandidateRegistration} loading={this.state.loading} />
                     </Col>
                 </Row>

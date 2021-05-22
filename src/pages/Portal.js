@@ -1,58 +1,58 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button } from 'react-bootstrap'
+import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button, Spinner } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
 import PageTitle from '../components/text/Title'
 import './Portal.css'
 import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
 
-function Portal( props ) {
-    const [candidateDetails, setCandidateDetails] = useState([{name: 'Faizan', cnic: '123', party: '786'}]);
-    const [loading, setLoading] = useState( true );
-    
+function Portal(props) {
+    const [candidateDetails, setCandidateDetails] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         let mounted = true
         if (props.loggedIn && props.contract != null && loading) {
             props.contract.getConstituencyCandidates(1).then((_cnics) => {
-                if( mounted ){
-                if (_cnics.length < 1) return alert('ERROR: No Candidate Data Exists')
-                _cnics = _cnics.map((el) => el.toString())
-                
-                let candidatesArray = []
-                Promise.all( _cnics.map((el,id)=>props.contract.getCandidateDetails(el)) )
-                    .then((_candidates) => _candidates.forEach(
+                if (mounted) {
+                    if (_cnics.length < 1) return alert('ERROR: No Candidate Data Exists')
+                    _cnics = _cnics.map((el) => el.toString())
+
+                    let candidatesArray = []
+                    Promise.all(_cnics.map((el, id) => props.contract.getCandidateDetails(el)))
+                        .then((_candidates) => _candidates.forEach(
                             (_candidate, id) => candidatesArray.push({
                                 cnic: _cnics[id],
                                 name: _candidate[0],
                                 party: _candidate[1].toString()
                             })))
-                    .then(()=>{
-                        setCandidateDetails( candidatesArray )
-                        console.log( 'candidateDetails', candidatesArray )
-                        setLoading( false )
-                    })
+                        .then(() => {
+                            setCandidateDetails(candidatesArray)
+                            console.log('candidateDetails', candidatesArray)
+                            setLoading(false)
+                        })
 
-                // _cnics.forEach((_cnic) => {
-                //     props.contract.getCandidateDetails(_cnic).then((_candidates) => {
-                //         candidatesArray.push({
-                //             cnic: _cnic,
-                //             name: _candidates[0],
-                //             party: _candidates[1].toString()
-                //         })
-                //     })
-                // })
-                
+                    // _cnics.forEach((_cnic) => {
+                    //     props.contract.getCandidateDetails(_cnic).then((_candidates) => {
+                    //         candidatesArray.push({
+                    //             cnic: _cnic,
+                    //             name: _candidates[0],
+                    //             party: _candidates[1].toString()
+                    //         })
+                    //     })
+                    // })
+
                 }
             }).catch((err) => alert('ERROR! ' + err.message))
-        } 
+        }
 
         return () => mounted = false
-    }, [ loading, props.contract, props.loggedIn ])
+    }, [loading, props.contract, props.loggedIn])
 
     const renderCandidateRow = (candidate, index) => {
         return (
             <tr key={candidate.cnic}>
-                <td>{index+1}</td> 
+                <td>{index + 1}</td>
                 <td>{candidate.cnic}</td>
                 <td>{candidate.name}</td>
                 <td>{candidate.party}</td>
@@ -78,7 +78,7 @@ function Portal( props ) {
                             </tr>
                         </thead>
                         <tbody>
-                            {loading && <tr><td colSpan="5">Loading...</td></tr>}
+                            {loading && <tr><td colSpan="6" className="text-center"><Spinner animation="border" /></td></tr>}
                             {!loading && candidateDetails.map(renderCandidateRow)}
                         </tbody>
                     </Table>

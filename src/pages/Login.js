@@ -8,7 +8,7 @@ function Login( props ) {
     return (
         <div className="page-login">
                 <Row>
-                    <Col md="5" sm="10" xs="12" className="mx-auto">
+                    <Col md="6" sm="12" className="mx-auto">
                         <LoginForm loginUpdate={props.loginUpdate} />
                         { (props.loggedIn) && <Redirect to="/portal" /> }
                     </Col>
