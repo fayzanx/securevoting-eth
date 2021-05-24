@@ -1,17 +1,15 @@
 #ignore truffle build artifcats
-/build
-/src/artifacts
+front/build
+front/src/artifacts
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+front/node_modules
+server/node_modules
+.pnp*
+.pnp.js*
 
 # testing
-/coverage
-
-# production
-/build
+front/coverage
 
 # misc
 .DS_Store
