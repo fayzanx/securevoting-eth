@@ -27,7 +27,7 @@ function RegisterVoter( props ) {
                 </Form.Group>
                 <Form.Group controlId="mrvConst">
                     <Form.Label>Constituency</Form.Label>
-                    <Form.Control name="constituency" type="text" placeholder="NA-249" ref={register({ required: "Constituency is required" })} />
+                    <Form.Control name="constituency" type="text" placeholder="NA-123" ref={register({ required: "Constituency is required" })} />
                 </Form.Group>
                 <Button type="submit" value="login" className="mb-2 w-100" size="lg" disabled={props.loading}>
                     {!props.loading && 'Register Voter'}

@@ -11,19 +11,25 @@ function RegisterAgent( props ) {
     }
     return (
         <div className="form-register-agent">
-            <Alert variant={(errors.address || errors.const) ? "danger" : "primary"}>
+            <Alert variant={(errors.address || errors.const || errors.constituency) ? "danger" : "primary"}>
                 <div><b>Agent Registration</b></div>
-                {!(errors.address || errors.const) && <span>All fields required</span>}
+                {!(errors.address || errors.const || errors.constituency) && <span>All fields required</span>}
                 <ul>
                     {errors.address && <li>{errors.address.message}</li>}
                     {errors.cnic && <li>{errors.cnic.message}</li>}
+                    {errors.constituency && <li>{errors.constituency.message}</li>}
                 </ul>
             </Alert>
             <Form onSubmit={handleSubmit(onSubmitCallback)}>
                 <Form.Group controlId="mraCnic">
                     <Form.Label>CNIC</Form.Label>
-                    {/* <Form.Control name="cnic" type="text" placeholder="12345-6789012-3" ref={register({ required: "CNIC is required" })} disabled={true}/> */}
-                    <Form.Control name="cnic" type="text" placeholder="12345-6789012-3" disabled={true}/>
+                    {/* <Form.Control name="cnic" type="text" placeholder="12345-1234567-8" ref={register({ required: "CNIC is required" })} disabled={true}/> */}
+                    <Form.Control name="cnic" type="text" placeholder="12345-1234567-8" disabled={true}/>
+                </Form.Group>
+                <Form.Group controlId="mraConst">
+                    <Form.Label>Constituency</Form.Label>
+                    {/* <Form.Control name="cnic" type="text" placeholder="12345-1234567-8" ref={register({ required: "CNIC is required" })} disabled={true}/> */}
+                    <Form.Control name="constituency" type="text" placeholder="NA-123" disabled={true}/>
                 </Form.Group>
                 <Form.Group controlId="mraAddress">
                     <Form.Label>ETH Address</Form.Label>

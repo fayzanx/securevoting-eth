@@ -1,9 +1,6 @@
 pragma solidity >=0.7.0 <0.8.0;
 //SPDX-License-Identifier: UNLICENSED
 
-//Found the mapping solution i was trying to do
-//https://ethereum.stackexchange.com/questions/58637/how-are-double-mappings-indexed
-
 contract SecureVote {
 
     // struct govtID { // government issued ID
@@ -16,7 +13,7 @@ contract SecureVote {
         bool voted;  // if true, that person already voted
         bool registered;
         uint16 constituency;
-        uint voted_time;
+        uint votedTime;
     }
 
     struct Candidate {
@@ -35,7 +32,6 @@ contract SecureVote {
     // cnic mappings
     mapping(uint64 => Voter) voterDetails;
     mapping(uint64 => Candidate) candidateDetails;
-    //mapping(uint16 => mapping(uint64 => Candidate)) candidateDetails;
     mapping(uint16 => uint64[]) constituencyCandidates; //cnic and (name?)
 
     // address mappings
@@ -94,11 +90,11 @@ contract SecureVote {
     function vote(uint64 _cnic, uint64 voted_cnic) public onlyPollingAgent voterRegistered(_cnic) voterHasntVoted(_cnic) {
         require(voterDetails[_cnic].constituency == candidateDetails[voted_cnic].constituency); //possible modifier
         voterDetails[_cnic].voted = true;
-        voterDetails[_cnic].voted_time = block.timestamp;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
+        voterDetails[_cnic].votedTime = block.timestamp;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
         candidateDetails[voted_cnic].voteCount++;
     }
     
-    function winner(uint16 _const) public view onlyOwner returns(uint64 cnic_) {
+    function winner(uint16 _const) public view onlyOwner returns (uint64 cnic_) {
         uint64 max = 0;
         uint64 winner_ = 0;
         uint64[] memory candidates = getConstituencyCandidates(_const);
@@ -118,18 +114,19 @@ contract SecureVote {
 }
 
 /*  TODO
-    1. Add ownership transfer / renouncing functions.
-    2. While registering candidate, check if a party is nominating more than one cadidate for a constituency
+    1. Add function that returns the results of the election for a particular constituency
+    2. Add cnic, constituency information for agent. Agent can't perform any actions outside the constituency
     3. Add check, agent can't be a candidate
-    4. Add cnic, constituency information for agent. Agent can't perform any actions outside the constituency
+    4. Add ownership transfer / renouncing functions.
+    5. While registering candidate, check if a party is nominating more than one cadidate for a constituency
+    6. Add time constraints for voting
+    7. (optional) change the constituency details function to return full details once  
 */
 
 /*
-Possible voting method:
-Voter will get his constituency number from NADRA(Every constituency is mapped to a number). Every voter 
-can vote only to candidates of his/her constituency. In polling booths, polling agents(one from every party)
-will verify if voter is registered or not and if he has already voted or not. After verifying, polling 
-agents will let him/her vote from a Dapp in a node/laptop. He will fill his constituency, and cnic
-(only for voting record and will not be recorded against a vote). Then select symbol of selected candidate
-and vote complete.
+Revisted Voting Procedure:
+Owner will deploy the contract and register candidates, agents and voters. Additional information for
+candidates and voters will be stored off-chain. Agent logs in to the application to enable voting.
+The voters will then one-by-one authenticate via fingerprint and vote using the application. At the
+end of all voting sessions, owner can announce the winners. 
 */

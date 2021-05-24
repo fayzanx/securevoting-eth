@@ -7,10 +7,9 @@ function Login( props ) {
     const { register, handleSubmit, errors } = useForm();
 
     function onSubmitCallback( data ) {
-        //console.log( data )
 
         if( data.cnic === "123" && data.password === "abc" )
-            props.loginUpdate.call( data )
+            props.loginUpdate( true, data )
     }
 
     return (

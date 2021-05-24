@@ -33,7 +33,7 @@ function RegisterCandidate( props ) {
                 </Form.Group>
                 <Form.Group controlId="mrcConst">
                     <Form.Label>Constituency</Form.Label>
-                    <Form.Control name="constituency" type="text" placeholder="NA-249" ref={register({ required: "Constituency is required" })} />
+                    <Form.Control name="constituency" type="text" placeholder="NA-123" ref={register({ required: "Constituency is required" })} />
                 </Form.Group>
                 <Form.Group controlId="mrcParty">
                     <Form.Label>Party</Form.Label>

@@ -28,20 +28,9 @@ function Portal(props) {
                             })))
                         .then(() => {
                             setCandidateDetails(candidatesArray)
-                            console.log('candidateDetails', candidatesArray)
+                            // console.log('candidateDetails', candidatesArray)
                             setLoading(false)
                         })
-
-                    // _cnics.forEach((_cnic) => {
-                    //     props.contract.getCandidateDetails(_cnic).then((_candidates) => {
-                    //         candidatesArray.push({
-                    //             cnic: _cnic,
-                    //             name: _candidates[0],
-                    //             party: _candidates[1].toString()
-                    //         })
-                    //     })
-                    // })
-
                 }
             }).catch((err) => alert('ERROR! ' + err.message))
         }

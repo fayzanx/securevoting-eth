@@ -1,18 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { Container, Jumbotron, Button } from 'react-bootstrap'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom'
 import Web3 from 'web3'
 import TruffleContract from '@truffle/contract'
 //import { secureVoteAddress } from '../config'
 import secureVoteJson from '../artifacts/SecureVote.json'
 
-import TopNavigation from '../components/nav/Topbar'
-import PageTitle from '../components/text/Title'
-import LoginPage from '../pages/Login'
 import PortalPage from '../pages/Portal'
-import RegisterCandidatePage from '../pages/RegisterCandidate'
+import LoginPage from '../pages/Login'
 import RegisterVoterPage from '../pages/RegisterVoter'
 import RegisterAgentPage from '../pages/RegisterAgent'
+import RegisterCandidatePage from '../pages/RegisterCandidate'
+
+import TopNavigation from '../components/nav/Topbar'
+import PageTitle from '../components/text/Title'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css'
@@ -56,8 +57,8 @@ class App extends Component {
         this.loadBlockchainData()
     }
 
-    handleUserLoginStatus = (data) => {
-        this.setState({ loggedIn: true })
+    handleUserLoginStatus = (status, data) => {
+        this.setState({ loggedIn: status })
     }
 
     render() {
@@ -78,6 +79,7 @@ class App extends Component {
                             <Route path="/manage" component={PageUnderConstruction} />
 
                             <Route path="/account/login" render={(props) => <LoginPage loggedIn={this.state.loggedIn} loginUpdate={this.handleUserLoginStatus} {...props} />} />
+                            <Route path="/account/logout" render={(props) => <LogoutPage loggedIn={this.state.loggedIn} loginUpdate={this.handleUserLoginStatus} {...props} />} />
                             <Route path="/account/logout" component={LogoutPage} />
                             <Route path="/account/profile" component={PageUnderConstruction} />
 
@@ -108,20 +110,7 @@ function PageHome() {
         </div>
     )
 }
-function PageA() {
-    return (
-        <div>
-            <PageTitle title="PAGE A" subtitle="Just a sample page" />
-        </div>
-    )
-}
-function PageB() {
-    return (
-        <div>
-            <PageTitle title="PAGE B" subtitle="Just a sample page" />
-        </div>
-    )
-}
+
 function PageUnderConstruction() {
     return (
         <div>
@@ -129,10 +118,33 @@ function PageUnderConstruction() {
         </div>
     )
 }
-function LogoutPage() {
+
+function LogoutPage( props ) {
+
+    useEffect(()=>{
+        if( props.loggedIn ) props.loginUpdate( false )
+    }, [props])
+
     return (
         <div>
-            <PageTitle title="LOGOUT PAGE" subtitle="Just a sample page" />
+            <PageTitle title="LOGOUT" subtitle="Logging you out..." />
+            { !props.loggedIn && <Redirect to="/" />}
+        </div>
+    )
+}
+
+function PageA() {
+    return (
+        <div>
+            <PageTitle title="PAGE A" subtitle="Just a sample page" />
+        </div>
+    )
+}
+
+function PageB() {
+    return (
+        <div>
+            <PageTitle title="PAGE B" subtitle="Just a sample page" />
         </div>
     )
 }

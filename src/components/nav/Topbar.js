@@ -30,9 +30,9 @@ function Topbar( props ) {
                         <NavDropdown title="Governance" id="basic-nav-dropdown">
                             <Link to="/manage" className="dropdown-item">Manage</Link>
                             <NavDropdown.Divider />
-                            <Link to="/manage/register-candidate" className="dropdown-item">Register Candidate</Link>
                             <Link to="/manage/register-voter" className="dropdown-item">Register Voter</Link>
                             <Link to="/manage/register-agent" className="dropdown-item">Register Agent</Link>
+                            <Link to="/manage/register-candidate" className="dropdown-item">Register Candidate</Link>
                             <NavDropdown.Divider />
                             <Link to="/manage/result" className="dropdown-item">View Result</Link>
                         </NavDropdown>
