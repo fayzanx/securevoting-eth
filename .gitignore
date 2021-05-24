@@ -1,15 +1,15 @@
 #ignore truffle build artifcats
-front/build
-front/src/artifacts
+dapp/build
+dapp/src/artifacts
 
 # dependencies
-front/node_modules
+dapp/node_modules
 server/node_modules
 .pnp*
 .pnp.js*
 
 # testing
-front/coverage
+dapp/coverage
 
 # misc
 .DS_Store
