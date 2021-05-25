@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import RegisterCandidateForm from '../components/form/RegisterCandidate'
-import TransactionProcessedModal from '../components/modal/TransactionProcessed'
-import PageTitle from '../components/text/Title'
+import RegisterCandidateForm from '../form/RegisterCandidate'
+import TransactionProcessedModal from '../modal/TransactionProcessed'
+import PageTitle from '../text/Title'
 
 class RegisterCandidate extends Component {
 

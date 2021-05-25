@@ -11,6 +11,9 @@ server/node_modules
 # testing
 dapp/coverage
 
+# don't push databse keys
+server/db.js
+
 # misc
 .DS_Store
 .env.local

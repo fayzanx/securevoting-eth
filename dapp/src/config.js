@@ -1,1 +1,1 @@
-export const secureVoteAddress = "0x559f3c8E277504C7f49EF36C9c72D742ad5a3688"
+export const BACKEND_URL = 'http://localhost:5000/'

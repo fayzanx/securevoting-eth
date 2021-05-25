@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import RegisterVoterForm from '../components/form/RegisterVoter'
-import TransactionProcessedModal from '../components/modal/TransactionProcessed'
-import PageTitle from '../components/text/Title'
+import RegisterAgentForm from '../form/RegisterAgent'
+import TransactionProcessedModal from '../modal/TransactionProcessed'
+import PageTitle from '../text/Title'
 
-class RegisterVoter extends Component {
+class RegisterAgent extends Component {
 
     constructor(props) {
         super(props)
@@ -14,29 +14,30 @@ class RegisterVoter extends Component {
             loading: false,
             modal: false,
             success: false,
+
         }
     }
 
     handleModalClose = () => this.setState({modal: false})
-    
-    handleRegisterVoter = ( data ) => {
-        console.log('handleRegisterVoter', data)
+
+    handleRegisterAgent = (data) => {
+        console.log('handleRegisterAgent', data)
         this.setState({ loading: true })
-        this.props.contract.registerVoter( data.cnic, data.constituency, { from: this.props.account } )
-        .then((result) => {
-            console.log(result)
-            this.setState({ modal: true, success: true })
-            //not currently handling fails with modal, future proofing
-        })
-        .catch((err) => {
-            alert('ERROR! [register-voter] ' + err.message)
-        })
-        .then(()=>this.setState({ loading: false }))
+        this.props.contract.registerPollingAgent(data.address, { from: this.props.account })
+            .then((result) => {
+                console.log(result)
+                this.setState({ modal: true, success: true })
+                //not currently handling fails with modal, future proofing
+            })
+            .catch((err) => {
+                alert('ERROR! [register-agent] ' + err.message)
+            })
+            .then(()=>this.setState({ loading: false }))
     }
 
     render() {
         return (
-            <div className="page-register-voter">
+            <div className="page-register-agent">
                 { !this.props.loggedIn && <Redirect to="/account/login" />}
                 <TransactionProcessedModal
                     show={this.state.modal} 
@@ -48,12 +49,11 @@ class RegisterVoter extends Component {
                         <PageTitle title="GOVERNANCE AREA" subtitle="Setup and Manage Elections from here" />
                     </Col>
                     <Col md="6" sm="12" className="mx-auto">
-                        <RegisterVoterForm onRegister={this.handleRegisterVoter} loading={this.state.loading}/>
+                        <RegisterAgentForm onRegister={this.handleRegisterAgent} loading={this.state.loading} />
                     </Col>
                 </Row>
             </div>
         )
     }
 }
-
-export default RegisterVoter
+export default RegisterAgent

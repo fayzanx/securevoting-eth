@@ -2,7 +2,7 @@ import React from 'react'
 import {Row, Col} from 'react-bootstrap'
 import {Redirect} from 'react-router-dom'
 
-import LoginForm from '../components/form/Login'
+import LoginForm from '../form/Login'
 
 function Login( props ) {
     return (

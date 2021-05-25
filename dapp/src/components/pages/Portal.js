@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button, Spinner } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 
-import PageTitle from '../components/text/Title'
+import PageTitle from '../text/Title'
 import './Portal.css'
-import ImgPlaceholderUser from '../assets/img/placeholder-user.png'
+import ImgPlaceholderUser from '../../assets/img/placeholder-user.png'
 
 function Portal(props) {
     const [candidateDetails, setCandidateDetails] = useState([]);
