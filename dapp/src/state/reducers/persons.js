@@ -1,10 +1,12 @@
+import { FETCH_ALL, UPDATE, CREATE } from '../../constants/actionTypes'
+
 const personsReducer = ( persons=[], action ) => {
     switch( action.type ){
-        case 'FETCH_ALL':
+        case FETCH_ALL:
             return action.payload
-        case 'CREATE':
+        case CREATE:
             return [...persons, action.payload]
-        case 'UPDATE':
+        case UPDATE:
             return persons.map((person) => person._id === action.payload._id ? action.payload : person)
         default:
             return persons

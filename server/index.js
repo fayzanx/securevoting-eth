@@ -2,23 +2,29 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
-import PersonRoutes from './routes/persons.js'
+import PersonRoutes from './routes/person.js'
 
-import {CONNECTION_URL} from './db.js'
-const PORT = process.env.PORT || 5000
 
 const app = express()
+dotenv.config()
 
 // properly send requests
 app.use(bodyParser.json({ limit: "3mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "3mb", extended: true }))
 app.use(cors())
 
-app.use('/persons', PersonRoutes)
+// api endpoints
+app.use('/person', PersonRoutes)
+app.use('/', (req, res) => res.send('securevoting-eth API'))
+
+// constants
+const CONNECTION_URL = process.env.CONNECTION_URL
+const PORT = process.env.PORT || 5000
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
+.then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
     .catch((error) => console.log(error.message))
 
 mongoose.set('useFindAndModify', false)

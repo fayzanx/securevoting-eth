@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import PersonBiodata from '../models/PersonBiodata.js' 
+import PersonBiodata from '../models/Person.js'
 
 export const getPersons = async (req, res) => {
     try {
@@ -14,10 +14,27 @@ export const getPersons = async (req, res) => {
     }
 }
 
+export const getPerson = async (req, res) => {
+    const {cnic: _cnic} = req.params
+    try {
+
+        const PersonBiodataObject = await PersonBiodata.findOne({ cnic: _cnic })
+        res.status(200).json( PersonBiodataObject )
+
+    } catch (error) {
+
+        res.status(404).json({ message: error.message })
+
+    }
+}
+
 export const createPerson = async (req, res) => {
     
-    const person = req.body
-    const newPersonBiodata = new PersonBiodata(person)
+    const { cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress } = req.body
+
+    const newPersonBiodata = new PersonBiodata({ cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress })
+
+    console.log({ cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress })
 
     try {
 
