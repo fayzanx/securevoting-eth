@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import PersonBiodata from '../models/PersonBiodata.js' 
 
 export const getPersons = async (req, res) => {
@@ -15,8 +16,8 @@ export const getPersons = async (req, res) => {
 
 export const createPerson = async (req, res) => {
     
-    const body = req.body
-    const newPersonBiodata = new PersonBiodata(body)
+    const person = req.body
+    const newPersonBiodata = new PersonBiodata(person)
 
     try {
 
@@ -28,4 +29,18 @@ export const createPerson = async (req, res) => {
         res.status(409).json({ message: error.message })
     
     }
+
+}
+
+export const updatePerson = async (req, res) => {
+    
+    const {id: _id} = req.params
+    const person = req.body
+
+    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No data for current ID exists')
+    
+    const updatedPerson = await PersonBiodata.findByIdAndUpdate(_id, person, { new: true })
+
+    res.json(updatedPerson)
+
 }

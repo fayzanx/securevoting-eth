@@ -1,7 +1,11 @@
 const personsReducer = ( persons=[], action ) => {
     switch( action.type ){
         case 'FETCH_ALL':
-            return persons
+            return action.payload
+        case 'CREATE':
+            return [...persons, action.payload]
+        case 'UPDATE':
+            return persons.map((person) => person._id === action.payload._id ? action.payload : person)
         default:
             return persons
     }
