@@ -4,10 +4,10 @@ import * as api from '../../api'
 /**
  * ACTION CREATORS
  */
-export const getPersons = () => async (dispatch) => {
+export const getPeople = () => async (dispatch) => {
     try {
         
-        const { data } = await api.fetchPersons()
+        const { data } = await api.fetchPeople()
         dispatch({ type: FETCH_ALL, payload: data })
     
     } catch (error) {

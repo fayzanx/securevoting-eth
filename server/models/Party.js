@@ -5,6 +5,7 @@ const PartySchema = mongoose.Schema({
     name:               { type: String, required: true },
     abbreviation:       { type: String, required: true },
     symbol:             { type: String, required: true },
+    symbolName:         { type: String, required: true },
     logo:               { type: String, required: true },
     flag:               { type: String, required: true },
     focalPersonCnic:    { type: Number, required: true },

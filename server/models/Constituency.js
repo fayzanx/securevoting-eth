@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 
-const Constituency = mongoose.Schema({
-    id:                 { type: Number, required: true, unique: true },
-    type:               { type: String, required: true },
-    number:             { type: String, required: true },
-    name:               { type: String },
+const ConstituencySchema = mongoose.Schema({
+    id:       { type: Number, required: true, unique: true },
+    type:     { type: String, required: true },
+    locator:  { type: Number, required: true },
+    city:     { type: String, required: true }
 })
 
-const constituency = mongoose.model('constituency', Constituency)
-export default constituency
+const Constituency = mongoose.model('Constituency', ConstituencySchema)
+export default Constituency

@@ -29,9 +29,9 @@ export const getConstituency = async (req, res) => {
 
 export const createConstituency = async (req, res) => {
     
-    const { id, type, number, name } = req.body
+    const { id, type, number, locator, city } = req.body
 
-    const newConstituency = new Constituency({ id, type, number, name })
+    const newConstituency = new Constituency({ id, type, number, locator, city })
 
     try {
 

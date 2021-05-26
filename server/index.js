@@ -5,6 +5,8 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
 import PersonRoutes from './routes/person.js'
+import PartyRoutes from './routes/party.js'
+import ConstituencyRoutes from './routes/constituency.js'
 
 
 const app = express()
@@ -17,6 +19,8 @@ app.use(cors())
 
 // api endpoints
 app.use('/person', PersonRoutes)
+app.use('/party', PartyRoutes)
+app.use('/constituency', ConstituencyRoutes)
 app.use('/', (req, res) => res.send('securevoting-eth API'))
 
 // constants
