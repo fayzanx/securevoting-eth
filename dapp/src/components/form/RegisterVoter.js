@@ -3,16 +3,16 @@ import { Alert, Form, Button, Spinner } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 
-function RegisterVoter( props ) {
+function RegisterVoter(props) {
     const { register, handleSubmit, errors } = useForm();
 
     const constituencies = useSelector((state) => state.constituency)
 
-    function onSubmitCallback( data ) {
+    function onSubmitCallback(data) {
         console.log(data)
-        props.onRegister( data ) 
+        props.onRegister(data)
     }
-    
+
     return (
         <div className="form-register-voter">
             <Alert variant={(errors.cnic || errors.const) ? "danger" : "primary"}>
@@ -23,8 +23,9 @@ function RegisterVoter( props ) {
                     {errors.constituency && <li>{errors.constituency.message}</li>}
                 </ul>
             </Alert>
+            
             <Form onSubmit={handleSubmit(onSubmitCallback)}>
-            <Form.Group controlId="mrvCnic">
+                <Form.Group controlId="mrvCnic">
                     <Form.Label>CNIC</Form.Label>
                     <Form.Control name="cnic" type="text" placeholder="12345-1234567-8" ref={register({
                         required: "CNIC is required",
@@ -36,10 +37,10 @@ function RegisterVoter( props ) {
                     <Form.Label>Constituency</Form.Label>
                     <Form.Control as="select" name="constituency" ref={register({
                         required: "Constituency info is required",
-                        min: {value: 100, message: "Constituency selection invalid"}
+                        min: { value: 100, message: "Constituency selection invalid" }
                     })}>
                         <option value={-1} defaultValue>Select</option>
-                        {constituencies.map((c, i)=>(
+                        {constituencies.map((c, i) => (
                             <option key={i} value={c.id}>
                                 {`${c.name} - ${c.city}`}
                             </option>
