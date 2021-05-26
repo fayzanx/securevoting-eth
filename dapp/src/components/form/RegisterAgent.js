@@ -9,6 +9,7 @@ function RegisterAgent( props ) {
     const constituencies = useSelector(state => state.constituency)
 
     function onSubmitCallback( data ) {
+        //data.cnic = data.cnic.replaceAll('-','')
         console.log(data)
         props.onRegister( data )
     }

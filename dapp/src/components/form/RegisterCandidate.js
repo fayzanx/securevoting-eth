@@ -12,6 +12,7 @@ function RegisterCandidate(props) {
     // console.log({ parties })
 
     const onSubmitCallback = (data) => {
+        data.cnic = data.cnic.replaceAll('-','')
         console.log('onSubmitCallback', data)
         props.onRegister(data)
     }

@@ -1,10 +1,10 @@
-import { CONSTITUENCY_FETCH_ALL, CONSTITUENCY_FETCH_ONE } from '../../constants/actionTypes'
+import { CONSTITUENCY_GET_ALL_SUCCESS, CONSTITUENCY_GET_ONE_SUCCESS } from '../../constants/actionTypes'
 
 const cosntituencyReducer = ( constituencies=[], action ) => {
     switch( action.type ){
-        case CONSTITUENCY_FETCH_ALL: 
+        case CONSTITUENCY_GET_ALL_SUCCESS: 
             return action.payload
-        case CONSTITUENCY_FETCH_ONE:
+        case CONSTITUENCY_GET_ONE_SUCCESS:
             return [...constituencies, action.payload]
         default:
             return constituencies

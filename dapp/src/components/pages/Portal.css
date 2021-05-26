@@ -9,3 +9,11 @@
     max-width: 100%;
     height: auto;
 }
+
+.portal-candidates tr td {
+    vertical-align: middle;
+}
+
+.portal-candidates img {
+    max-width: 10vw !important;
+}
