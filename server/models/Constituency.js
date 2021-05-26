@@ -2,8 +2,7 @@ import mongoose from 'mongoose'
 
 const ConstituencySchema = mongoose.Schema({
     id:       { type: Number, required: true, unique: true },
-    type:     { type: String, required: true },
-    locator:  { type: Number, required: true },
+    name:     { type: String, required: true },
     city:     { type: String, required: true }
 })
 

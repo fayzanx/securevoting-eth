@@ -9,7 +9,8 @@ import secureVoteJson from './artifacts/SecureVote.json'
 
 // state managemenet
 import { useDispatch } from 'react-redux'
-import { getPeople } from './state/actions/person'
+import { getConstituencies } from './state/actions/constituency'
+import { getParties } from './state/actions/party'
 
 // pages for the router
 import PortalPage from './components/pages/Portal'
@@ -32,7 +33,8 @@ const App = ( props ) => {
     const dispatch = useDispatch()
 
     useEffect(()=>{
-        dispatch( getPeople() )
+        dispatch( getParties() )
+        dispatch( getConstituencies() )
     },[ dispatch ])
 
     // normal state

@@ -30,11 +30,8 @@ export const getPerson = async (req, res) => {
 
 export const createPerson = async (req, res) => {
     
-    const { cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress } = req.body
-
-    const newPerson = new Person({ cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress })
-
-    console.log({ cnic, fullName, fatherName, photo, gender, dateOfBirth, dateOfIssue, dateOfExpiry, temporaryAddress, permanentAddress })
+    const personData = req.body
+    const newPerson = new Person(personData)
 
     try {
 

@@ -2,8 +2,8 @@ import express from 'express'
 import { getConstituencies, getConstituency, createConstituency } from '../controllers/constituency.js'
 const router = express.Router();
 
-router.get('/', getConstituencies);
+router.get('/all', getConstituencies);
 router.get('/:id', getConstituency);
-router.post('/', createConstituency);
+router.post('/new', createConstituency);
 
 export default router;

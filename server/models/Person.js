@@ -10,7 +10,8 @@ const PersonSchema = mongoose.Schema({
     dateIssue:          { type: Date, required: true },
     dateExpiry:         { type: Date, required: true }, //default: new Date('1947-08-14')
     temporaryAddress:   { type: String, required: true },
-    permanentAddress:   { type: String, required: true }
+    permanentAddress:   { type: String, required: true },
+    fingerprintTemplate:{ type: String} //, required: true } // disabled temporarily
 })
 
 const Person = mongoose.model('Person', PersonSchema)

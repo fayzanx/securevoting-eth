@@ -29,9 +29,8 @@ export const getParty = async (req, res) => {
 
 export const createParty = async (req, res) => {
     
-    const { id, name, abbreviation, symbol, logo, flag, focalPersonCnic } = req.body
-
-    const newParty = new Party({ id, name, abbreviation, symbol, logo, flag, focalPersonCnic })
+    const partyData = req.body
+    const newParty = new Party(partyData)
 
     try {
 
