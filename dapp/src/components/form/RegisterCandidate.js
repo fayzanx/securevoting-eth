@@ -6,8 +6,8 @@ import { useSelector } from 'react-redux'
 function RegisterCandidate(props) {
     const { register, handleSubmit, errors } = useForm();
 
-    const constituencies = useSelector((state) => state.constituency)
-    const parties = useSelector((state) => state.party)
+    const constituencies = useSelector((state) => state.constituencies)
+    const parties = useSelector((state) => state.parties)
     // console.log({ constituencies })
     // console.log({ parties })
 

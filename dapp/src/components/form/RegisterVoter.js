@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 function RegisterVoter(props) {
     const { register, handleSubmit, errors } = useForm();
 
-    const constituencies = useSelector((state) => state.constituency)
+    const constituencies = useSelector((state) => state.constituencies)
 
     function onSubmitCallback(data) {
         data.cnic = data.cnic.replaceAll('-','')

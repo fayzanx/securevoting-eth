@@ -17,7 +17,7 @@ export const getConstituencies = () => async (dispatch) => {
     }).catch((error) => {
 
         console.log(error)
-        dispatch({ type: CONSTITUENCY_GET_ALL_FAILURE })
+        dispatch({ type: CONSTITUENCY_GET_ALL_FAILURE, payload: error, error: true })
 
     })
 }
@@ -32,7 +32,7 @@ export const getConstituency = ( id ) => async (dispatch) => {
     }).catch(error => {
 
         console.log(error)
-        dispatch({ type: CONSTITUENCY_GET_ONE_FAILURE })
+        dispatch({ type: CONSTITUENCY_GET_ONE_FAILURE, payload: error, error: true })
 
     })
 }

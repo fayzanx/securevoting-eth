@@ -18,7 +18,7 @@ export const getParties = () => async (dispatch) => {
     }).catch((error) => {
 
         console.log(error)
-        dispatch({ type: PARTY_GET_ALL_FAILURE })
+        dispatch({ type: PARTY_GET_ALL_FAILURE, payload: error, error: true })
 
     })
 }
@@ -33,7 +33,7 @@ export const getParty = (id) => async (dispatch) => {
     }).catch(error => {
 
         console.log(error)
-        dispatch({ type: PARTY_GET_ONE_FAILURE })
+        dispatch({ type: PARTY_GET_ONE_FAILURE, payload: error, error: true })
 
     })
 }

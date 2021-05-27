@@ -1,26 +1,50 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button, Spinner, Tooltip, OverlayTrigger } from 'react-bootstrap'
+import { Col, Row, Card, ListGroup, ListGroupItem, Image, Table, Button, Spinner, Tooltip, OverlayTrigger, Alert } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import PageTitle from '../text/Title'
+import BioAuthFormLogin from '../form/BioAuth/Login'
+import { getVoter, resetVoter } from '../../state/actions'
+
 import './Portal.css'
 import ImgPlaceholderUser from '../../assets/img/placeholder-user.png'
 
 function Portal(props) {
-    const [candidateDetails, setCandidateDetails] = useState([]);
-    const [dataLoading, setDataLoading] = useState(true);
+    const dispatch = useDispatch()
 
-    const parties = useSelector((state) => state.party)
+    const [candidateDetails, setCandidateDetails] = useState([])
+    const [dataLoading, setDataLoading] = useState(true)
+    const [authFormStep, setAuthFormStep] = useState(0)
+
+    const parties = useSelector((state) => state.parties)
     const partyLoading = useSelector((state) => state.loading['PARTY_GET_ALL'])
+    const voterLoading = useSelector((state) => state.loading['VOTER_GET'])
 
-    const processVote = ( id ) => {
-        console.log({ id })
+    const voter = useSelector((state) => state.voter)
+
+    const voterFromLoginHandler = (data) => {
+        dispatch(getVoter(data.cnic))
     }
 
-    useEffect(() => {
+    const processVote = (id) => {
+        if( id !== undefined && voter.cnic !== undefined ){
+            setAuthFormStep(10)
+            props.contract.vote(voter.cnic, id).then(( res )=>{
+                console.log(res)
+                dispatch(resetVoter( voter.cnic ))
+                setAuthFormStep(1)
+            }).catch(( error )=>{
+                alert(error.message)
+                dispatch(resetVoter( voter.cnic ))
+                setAuthFormStep(1)
+            })
+        }
+    }
+
+    useEffect(() => { // data loading from blockchain and database
         let mounted = true
-        if (props.loggedIn && props.contract != null && !partyLoading && dataLoading ) {
+        if (props.loggedIn && props.contract != null && !partyLoading && dataLoading) {
             props.contract.getConstituencyCandidates(1052).then((_cnics) => {
                 if (mounted) {
                     if (_cnics.length < 1) return alert('ERROR: No Candidate Data Exists')
@@ -41,9 +65,10 @@ function Portal(props) {
                             setCandidateDetails(candidatesArray)
                             console.log('candidateDetails', candidatesArray)
                         })
-                        
+
                         .then(() => {
                             setDataLoading(false)
+                            setAuthFormStep( 1 ) // enable voting
                         })
                 }
             }).catch((err) => alert('ERROR! ' + err.message))
@@ -52,7 +77,18 @@ function Portal(props) {
         return () => mounted = false
     }, [props.loggedIn, props.contract, partyLoading, dataLoading, parties])
 
-    const renderCandidateRow = (candidate, index) => {    
+
+    useEffect(() => { // voting process handling
+        if (props.loggedIn) {
+            if (voter && voter.fingerprintTemplate !== undefined) {
+                if( authFormStep === 1) setAuthFormStep(2)
+                if( authFormStep === 2) setTimeout(()=>setAuthFormStep(3), 5000)
+            }
+        }
+    }, [props.loggedIn, voter, authFormStep])
+
+ 
+    const renderCandidateRow = (candidate, index) => {
         return (
             <tr key={candidate.cnic}>
                 <td>{index + 1}</td>
@@ -69,7 +105,7 @@ function Portal(props) {
                         <Image src={candidate.partyInfo.symbol} fluid />
                     </OverlayTrigger>
                 </td>
-                <td><Button onClick={(e)=>processVote(candidate.cnic)} variant="success" size="md">VOTE</Button></td>
+                <td><Button disabled={authFormStep!==3} onClick={(e) => processVote(candidate.cnic)} variant="success" size="md">VOTE</Button></td>
             </tr>
         )
     }
@@ -81,7 +117,7 @@ function Portal(props) {
                 <Col md="8" sm="12">
                     <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here" />
                     <p>Account Address: {props.account} <br />
-                    Constituency: ID-1<br />
+                    Constituency: NA-52 - Islamabad<br />
                     Total Candidates: {!dataLoading && candidateDetails.length}</p>
                     <Table bordered striped hover className="portal-candidates">
                         <thead>
@@ -90,7 +126,7 @@ function Portal(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            { dataLoading
+                            {dataLoading
                                 ? <tr><td colSpan="6" className="text-center"><Spinner animation="border" /></td></tr>
                                 : candidateDetails.map(renderCandidateRow)
                             }
@@ -98,27 +134,43 @@ function Portal(props) {
                     </Table>
                 </Col>
                 <Col md="4" sm="12">
-                    <Card>
-                        {/* <Card.Img className="portal-voter-img" variant="top" src={ImgPlaceholderUser} roundedCircle/> */}
-                        <div className="mx-auto mt-1 portal-voter-img">
-                            <Image src={ImgPlaceholderUser} />
+                    <Card className="mb-4">
+                        <div className="mx-auto my-5 portal-voter-img">
+                            {authFormStep === 3 ? <Image src={voter.photo} /> : <Image src={ImgPlaceholderUser} />}
                         </div>
-                        <Card.Body>
-                            <Card.Title><b>Voter Name</b></Card.Title>
-                            <Card.Text>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est totam ducimus facere ipsam.
-                        </Card.Text>
+                        <div className={`mx-2 ${authFormStep < 3 ? 'my-5' : ''}`}>
+                            {authFormStep === 1 && <BioAuthFormLogin loading={voterLoading} handleComplete={voterFromLoginHandler} />}
+
+                            {authFormStep === 2 && <Alert variant="primary">
+                                <div><b>Biometric Authentication</b></div>
+                                <p>
+                                    Authentication in progress <Spinner animation="border" as="span" size="sm"/>
+                                    Place your thumb firmly on the sensor<br/>
+                                </p>
+                            </Alert>}
+
+                            {authFormStep === 3 && <Alert variant="success">
+                                <div><b>Authentication Success</b></div>
+                                <p>Voting enabled. Please select candidate of choice</p>
+                            </Alert>}
+
+                            {(authFormStep === 10 || authFormStep === 0) && <Alert variant="primary" className="text-center">
+                                <Spinner animation="border" as="span" />
+                            </Alert>}
+                        </div>
+
+                        {authFormStep===3 && <><Card.Body>
+                            <Card.Title><b>{voter.fullName}</b><small className="text-muted"> s/o {voter.fatherName}</small></Card.Title>
                         </Card.Body>
-                        <ListGroup className="list-group-flush">
-                            <ListGroupItem>CNIC Number</ListGroupItem>
-                            <ListGroupItem>CNIC Epiry</ListGroupItem>
-                            <ListGroupItem>Gender</ListGroupItem>
-                            <ListGroupItem>Father Name</ListGroupItem>
-                        </ListGroup>
+                            <Card.Text></Card.Text>
+                            <ListGroup className="list-group-flush">
+                                <ListGroupItem>CNIC Number <small className="text-muted">{voter.cnic}</small></ListGroupItem>
+                                <ListGroupItem>CNIC Expiry <small className="text-muted">{new Date(voter.dateExpiry).toDateString()}</small></ListGroupItem>
+                                <ListGroupItem>Gender <small className="text-muted">{voter.gender}</small></ListGroupItem>
+                            </ListGroup>
                         <Card.Body>
-                            <Card.Link href="#">Action 1</Card.Link>
-                            <Card.Link href="#">Action 2</Card.Link>
-                        </Card.Body>
+                            
+                        </Card.Body></>}
                     </Card>
                 </Col>
             </Row>

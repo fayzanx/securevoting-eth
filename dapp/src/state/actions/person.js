@@ -17,7 +17,7 @@ export const getPeople = () => async (dispatch) => {
     }).catch((error) => {
 
         console.log(error)
-        dispatch({ type: PERSON_GET_ALL_FAILURE })
+        dispatch({ type: PERSON_GET_ALL_FAILURE, payload: error, error: true })
 
     })
 }
@@ -32,7 +32,7 @@ export const getPerson = ( cnic ) => async (dispatch) => {
     }).catch(error => {
 
         console.log(error)
-        dispatch({ type: PERSON_GET_ONE_FAILURE })
+        dispatch({ type: PERSON_GET_ONE_FAILURE, payload: error, error: true })
 
     })
 }
