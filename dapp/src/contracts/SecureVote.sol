@@ -2,14 +2,8 @@ pragma solidity >=0.7.0 <0.8.0;
 //SPDX-License-Identifier: UNLICENSED
 
 contract SecureVote {
-
-    // struct govtID { // government issued ID
-    //     uint64 CNICnum; // cnic number
-    // }
-   //function addVoterList();
    
     struct Voter {
-        //govtID id;
         bool voted;  // if true, that person already voted
         bool registered;
         uint16 constituency;
@@ -17,13 +11,9 @@ contract SecureVote {
     }
 
     struct Candidate {
-        // If you can limit the length to a certain number of bytes, 
-        // always use one of bytes1 to bytes32 because they are much cheaper. But I guess you can't use bytes32 as fixed strings
-        //govtID id;
-        string name;    //bytes32 name;
-        uint16 party; //hold party as code, store codes externally
+        string name;
+        uint16 party; // party ID
         uint16 constituency;
-        //string logo; //logo should be accessed externally
         uint64 voteCount;
     }
 
@@ -32,7 +22,7 @@ contract SecureVote {
     // cnic mappings
     mapping(uint64 => Voter) voterDetails;
     mapping(uint64 => Candidate) candidateDetails;
-    mapping(uint16 => uint64[]) constituencyCandidates; //cnic and (name?)
+    mapping(uint16 => uint64[]) constituencyCandidates; // cnic
 
     // address mappings
     mapping(address => bool) isPollingAgent; 
@@ -61,12 +51,14 @@ contract SecureVote {
        owner = msg.sender;
     }
 
+
     function registerPollingAgent(address _paAddr) public onlyOwner {
         isPollingAgent[_paAddr] = true;
     }
 
+    // owner will register candidates
     function registerCandidate(uint64 _cnic, string memory _name, uint16 _party, uint16 _const) public onlyOwner {
-        //TODO: decide if we should bind candidates / voters with blockchain addresses.
+        require(candidateDetails[_const].voteCount == 0); // dont allow registration once voting started
         constituencyCandidates[_const].push(_cnic);
         candidateDetails[_cnic].name = _name;
         candidateDetails[_cnic].party = _party;
@@ -74,26 +66,36 @@ contract SecureVote {
         candidateDetails[_cnic].voteCount = 0;
     }
 
+    // get a list of candidates in a particular constituency
     function getConstituencyCandidates(uint16 _const) public view returns (uint64[] memory) {
         return constituencyCandidates[_const];
     }
 
-    function getCandidateDetails(uint64 _cnic) public view returns (string memory, uint16) { //can be handled externally.
+    // get details, this can be moved offchain
+    function getCandidateDetails(uint64 _cnic) public view returns (string memory, uint16) {
         return (candidateDetails[_cnic].name, candidateDetails[_cnic].party);
     }
 
-    function registerVoter(uint64 _cnic, uint16 _const) public  onlyOwner {//Owner will register. Polling agents will only cross check identity and let him vote.
+    // get detailed result for a single person, as returning arrays of objects not allowed yet
+    function getCandidateResults(uint64 _cnic) public view onlyOwner returns(string memory, uint16, uint64) { //name, party, votes
+        return (candidateDetails[_cnic].name, candidateDetails[_].party, candidateDetails[_cnic].voteCount)
+    }
+
+    // cant vote without first registering
+    function registerVoter(uint64 _cnic, uint16 _const) public  onlyOwner {// Owners will register. Agents can let vote
         voterDetails[_cnic].registered = true;
         voterDetails[_cnic].constituency = _const;
     }
     
+    // voting can only be done by the agents, authorized by owner
     function vote(uint64 _cnic, uint64 voted_cnic) public onlyPollingAgent voterRegistered(_cnic) voterHasntVoted(_cnic) {
         require(voterDetails[_cnic].constituency == candidateDetails[voted_cnic].constituency); //possible modifier
         voterDetails[_cnic].voted = true;
-        voterDetails[_cnic].votedTime = block.timestamp;       //But some calculation will be needed since it returns current block timestamp as seconds since unix epoch
+        voterDetails[_cnic].votedTime = block.timestamp;
         candidateDetails[voted_cnic].voteCount++;
     }
-    
+
+    // confirm winner, can be stored for record
     function winner(uint16 _const) public view onlyOwner returns (uint64 cnic_) {
         uint64 max = 0;
         uint64 winner_ = 0;
@@ -107,10 +109,6 @@ contract SecureVote {
         cnic_ = winner_; 
     }
 
-    //https://github.com/chrisdotn/jsmnSol/blob/master/contracts/JsmnSolLib.sol
-    // function registerCandidateFromSheet() public onlyOwner {  //Can't figure out how to import json
-    // }
-    
 }
 
 /*  TODO
