@@ -22,7 +22,7 @@ function Topbar( props ) {
     return (
         <div className="nav-top mb-3">
             <Navbar bg="dark" variant="dark" expand="lg" >
-                <Navbar.Brand href="#home" ><b className="text-info">C H A I N </b>EVS v0.2</Navbar.Brand>
+                <Navbar.Brand href="#home" ><b className="text-info">C H A I N </b>EVS v0.3</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
