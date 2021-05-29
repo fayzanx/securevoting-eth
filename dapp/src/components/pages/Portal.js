@@ -30,7 +30,7 @@ function Portal(props) {
     const processVote = (id) => {
         if( id !== undefined && voter.cnic !== undefined ){
             setAuthFormStep(10)
-            props.contract.vote(voter.cnic, id).then(( res )=>{
+            props.contract.vote(voter.cnic, id, { from: props.account }).then(( res )=>{
                 console.log(res)
                 dispatch(resetVoter( voter.cnic ))
                 setAuthFormStep(1)
@@ -45,7 +45,7 @@ function Portal(props) {
     useEffect(() => { // data loading from blockchain and database
         let mounted = true
         if (props.loggedIn && props.contract != null && !partyLoading && dataLoading) {
-            props.contract.getConstituencyCandidates(1052).then((_cnics) => {
+            props.contract.getConstituencyCandidates( props.constituency ).then((_cnics) => {
                 if (mounted) {
                     if (_cnics.length < 1) return alert('ERROR: No Candidate Data Exists')
                     _cnics = _cnics.map((el) => el.toString())
@@ -75,7 +75,7 @@ function Portal(props) {
         }
 
         return () => mounted = false
-    }, [props.loggedIn, props.contract, partyLoading, dataLoading, parties])
+    }, [props.loggedIn, props.contract, props.constituency, partyLoading, dataLoading, parties])
 
 
     useEffect(() => { // voting process handling
@@ -115,14 +115,14 @@ function Portal(props) {
             { !props.loggedIn && <Redirect to="/account/login" />}
             <Row>
                 <Col md="8" sm="12">
-                    <PageTitle title="VOTING AREA" subtitle="Candidate details will appear here" />
+                    <PageTitle title="VOTING AREA" subtitle="Choose a candidate of your choice" />
                     <p>Account Address: {props.account} <br />
                     Constituency: NA-52 - Islamabad<br />
                     Total Candidates: {!dataLoading && candidateDetails.length}</p>
                     <Table bordered striped hover className="portal-candidates">
                         <thead>
                             <tr>
-                                <th>#</th>{/*<th>CNIC</th>*/}<th>Name</th><th>Party</th><th>Symbol</th><th>Action</th>
+                                <th>#</th><th>Name</th><th>Party</th><th>Symbol</th><th>Action</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -28,8 +28,6 @@ function Topbar( props ) {
                     <Nav className="mr-auto">
                         <Link to="/" className="nav-link">Home</Link>
                         <NavDropdown title="Governance" id="basic-nav-dropdown">
-                            <Link to="/manage" className="dropdown-item">Manage</Link>
-                            <NavDropdown.Divider />
                             <Link to="/manage/register-voter" className="dropdown-item">Register Voter</Link>
                             <Link to="/manage/register-agent" className="dropdown-item">Register Agent</Link>
                             <Link to="/manage/register-candidate" className="dropdown-item">Register Candidate</Link>
@@ -38,11 +36,8 @@ function Topbar( props ) {
                         </NavDropdown>
                         <Link to="/portal" className="nav-link">Voting Portal</Link>
                         <NavDropdown title="More" id="basic-nav-dropdown">
-                            <Link to="/portal/page1" className="dropdown-item">Portal Page A</Link>
-                            <Link to="/portal/page2" className="dropdown-item">Portal Page B</Link>
-                            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                            <Link to="/portal/page1" className="dropdown-item">Page A</Link>
+                            <Link to="/portal/page2" className="dropdown-item">Page B</Link>
                         </NavDropdown>
                     </Nav>
                     

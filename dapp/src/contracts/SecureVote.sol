@@ -11,6 +11,7 @@ contract SecureVote {
     }
 
     struct Candidate {
+        bool registered;
         string name;
         uint16 party; // party ID
         uint16 constituency;
@@ -58,12 +59,13 @@ contract SecureVote {
 
     // owner will register candidates
     function registerCandidate(uint64 _cnic, string memory _name, uint16 _party, uint16 _const) public onlyOwner {
-        require(candidateDetails[_const].voteCount == 0); // dont allow registration once voting started
+        require(!candidateDetails[_cnic].registered); // not registered already
         constituencyCandidates[_const].push(_cnic);
-        candidateDetails[_cnic].name = _name;
-        candidateDetails[_cnic].party = _party;
+        candidateDetails[_cnic].registered   = true;
+        candidateDetails[_cnic].name         = _name;
+        candidateDetails[_cnic].party        = _party;
         candidateDetails[_cnic].constituency = _const;
-        candidateDetails[_cnic].voteCount = 0;
+        candidateDetails[_cnic].voteCount    = 0;
     }
 
     // get a list of candidates in a particular constituency
@@ -78,7 +80,7 @@ contract SecureVote {
 
     // get detailed result for a single person, as returning arrays of objects not allowed yet
     function getCandidateResults(uint64 _cnic) public view onlyOwner returns(string memory, uint16, uint64) { //name, party, votes
-        return (candidateDetails[_cnic].name, candidateDetails[_].party, candidateDetails[_cnic].voteCount)
+        return (candidateDetails[_cnic].name, candidateDetails[_cnic].party, candidateDetails[_cnic].voteCount);
     }
 
     // cant vote without first registering

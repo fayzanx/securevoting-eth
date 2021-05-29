@@ -9,12 +9,12 @@ import secureVoteJson from './artifacts/SecureVote.json'
 
 // state managemenet
 import { useDispatch } from 'react-redux'
-import { getConstituencies } from './state/actions/constituency'
-import { getParties } from './state/actions/party'
+import { getConstituencies, getParties, resetVoter } from './state/actions'
 
 // pages for the router
 import PortalPage from './components/pages/Portal'
 import LoginPage from './components/pages/Login'
+import ManageResultPage from './components/pages/ManageResult'
 import RegisterVoterPage from './components/pages/RegisterVoter'
 import RegisterAgentPage from './components/pages/RegisterAgent'
 import RegisterCandidatePage from './components/pages/RegisterCandidate'
@@ -86,12 +86,12 @@ const App = ( props ) => {
                 <Switch>
                     <Route path="/portal/page1" component={PageA} />
                     <Route path="/portal/page2" component={PageB} />
-                    <Route path="/portal" render={(props) => <PortalPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
+                    <Route path="/portal" render={(props) => <PortalPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} constituency={1052} {...props} />} />
 
                     <Route path="/manage/register-candidate" render={(props) => <RegisterCandidatePage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
                     <Route path="/manage/register-voter" render={(props) => <RegisterVoterPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
                     <Route path="/manage/register-agent" render={(props) => <RegisterAgentPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
-                    <Route path="/manage/result" component={PageUnderConstruction} />
+                    <Route path="/manage/result" render={(props) => <ManageResultPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
                     <Route path="/manage" component={PageUnderConstruction} />
 
                     <Route path="/account/login" render={(props) => <LoginPage loggedIn={loggedInStatus} loginUpdate={handleUserLoginStatus} {...props} />} />
@@ -109,83 +109,6 @@ const App = ( props ) => {
 
 export default App
 
-
-
-// class App extends Component {
-//     constructor(props) {
-//         super(props)
-//         this.state = { account: '', contract: null, loggedIn: false }
-
-//     }
-
-    // async loadBlockchainData() {
-    //     // if( window.ethereum ){ // metamask
-    //     //     this.provider = window.ethereum
-    //     //     this.web3 = new Web3(this.provider)
-
-    //     //     const accounts = await window.ethereum.enable()
-    //     //     this.setState({ account: accounts[0] })
-
-    //     //     window.ethereum.on('accountsChanged', )
-
-    //     // } else {
-    //     this.provider = Web3.givenProvider || "http://localhost:9545"
-    //     this.web3 = new Web3(this.provider)
-
-    //     const accounts = await this.web3.eth.getAccounts()
-    //     this.setState({ account: accounts[0] })
-    //     // }
-    //     //this.web3.eth.defaultAccount = accounts[0]
-
-    //     this.SecureVoteContract = TruffleContract(secureVoteJson)
-    //     this.SecureVoteContract.setProvider(this.provider)
-
-    //     this.SecureVoteContract.deployed().then((instance) => {
-    //         this.setState({ 'contract': instance })
-    //     })
-
-    // }
-
-    // componentDidMount() {
-    //     this.loadBlockchainData()
-    // }
-
-    // handleUserLoginStatus = (status, data) => {
-    //     this.setState({ loggedIn: status })
-    // }
-
-    // render() {
-    //     return (
-    //         <div className="app-main">
-    //             <Router>
-    //                 <TopNavigation address={accountAddress} loggedIn={loggedInStatus} />
-    //                 <Container>
-    //                     <Switch>
-    //                         <Route path="/portal/page1" component={PageA} />
-    //                         <Route path="/portal/page2" component={PageB} />
-    //                         <Route path="/portal" render={(props) => <PortalPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
-
-    //                         <Route path="/manage/register-candidate" render={(props) => <RegisterCandidatePage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
-    //                         <Route path="/manage/register-voter" render={(props) => <RegisterVoterPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
-    //                         <Route path="/manage/register-agent" render={(props) => <RegisterAgentPage contract={contractInstance} account={accountAddress} loggedIn={loggedInStatus} {...props} />} />
-    //                         <Route path="/manage/result" component={PageUnderConstruction} />
-    //                         <Route path="/manage" component={PageUnderConstruction} />
-
-    //                         <Route path="/account/login" render={(props) => <LoginPage loggedIn={loggedInStatus} loginUpdate={this.handleUserLoginStatus} {...props} />} />
-    //                         <Route path="/account/logout" render={(props) => <LogoutPage loggedIn={loggedInStatus} loginUpdate={this.handleUserLoginStatus} {...props} />} />
-    //                         <Route path="/account/logout" component={LogoutPage} />
-    //                         <Route path="/account/profile" component={PageUnderConstruction} />
-
-    //                         <Route path="/" component={PageHome} />
-    //                     </Switch>
-    //                 </Container>
-    //             </Router>
-    //         </div>
-    //     )
-    // }
-// }
-
-// export default App;
 
 // sample pages
 function PageHome() {
@@ -215,10 +138,14 @@ function PageUnderConstruction() {
 }
 
 function LogoutPage( props ) {
+    const dispatch = useDispatch()
 
     useEffect(()=>{
-        if( props.loggedIn ) props.loginUpdate( false )
-    }, [props])
+        if( props.loggedIn ){
+            props.loginUpdate( false )
+            dispatch( resetVoter() )
+        }
+    }, [props, dispatch])
 
     return (
         <div>
