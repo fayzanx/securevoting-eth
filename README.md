@@ -2,6 +2,29 @@
 
 An Ethereum Blockchain based Secure Voting Application for use in Pakistan's Electrocal Process.
 
+## Demo
+
+A simple working of the application (the software part) is shown here. For hardware part, video can be provided on request. Only main gifs are shown, rest can be seen in the `/screens` folder.
+
+### 1. Login and Loading of Data
+![Login and Loading of Data](./screens/seth-1-login-and-loading.gif)
+
+### 2. Governance: Register Candidate
+![Performing registration of a candidate](./screens/seth-2-register-candidate-x1.gif)
+
+### 3. Governance: Register Voter
+![Performing registration of a voter](./screens/seth-3-register-voter-x1.gif)
+
+### 4. Governance: Register Supervisor
+![Performing registration of a supervisor](./screens/seth-4-register-agent.gif)
+
+### 5. Voter: Cast Vote
+![Different users casting their votes](./screens/seth-5-cast-votes-x3.gif)
+
+### 6. Governance: View Results
+![Election owner viewing results](./screens/seth-6-view-results.gif)
+
+
 ## Development
 
 ### Pre-requisites
